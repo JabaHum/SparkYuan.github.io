@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ViewRoot，DecorView，MeasureSpec和View的工作原理 | Spark Yuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="View的绘制流程是从ViewRoot的performTraversals方法开始的，它经过measure、layout和draw三个过程才能最终将一个View绘制出来，其中measure用来测量View的宽和高，layout用来确定View在父容器中的放置位置，而draw则负责将View绘制在屏幕上。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ViewRoot，DecorView，MeasureSpec和View的工作原理">
+<meta property="og:url" content="http://sparkyuan.github.io/2016/03/11/ViewRoot，DecorView，MeasureSpec和View的工作原理/index.html">
+<meta property="og:site_name" content="Spark Yuan">
+<meta property="og:description" content="View的绘制流程是从ViewRoot的performTraversals方法开始的，它经过measure、layout和draw三个过程才能最终将一个View绘制出来，其中measure用来测量View的宽和高，layout用来确定View在父容器中的放置位置，而draw则负责将View绘制在屏幕上。">
+<meta property="og:updated_time" content="2016-03-11T11:42:50.620Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ViewRoot，DecorView，MeasureSpec和View的工作原理">
+<meta name="twitter:description" content="View的绘制流程是从ViewRoot的performTraversals方法开始的，它经过measure、layout和draw三个过程才能最终将一个View绘制出来，其中measure用来测量View的宽和高，layout用来确定View在父容器中的放置位置，而draw则负责将View绘制在屏幕上。">
+  
+    <link rel="alternative" href="/atom.xml" title="Spark Yuan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/spark.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Spark Yuan</a></h1>
+        </hgroup>
+
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/SparkYuan" title="GitHub"></a></li>
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:daniellee0929@gmail.com" title="Email"></a></li>
+                            
+                                <li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/u/2645327714" title="新浪微博"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AIDL/" style="font-size: 10px;">AIDL</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/DecorView/" style="font-size: 10px;">DecorView</a> <a href="/tags/IPC/" style="font-size: 10px;">IPC</a> <a href="/tags/MeasureSpec和View的工作原理/" style="font-size: 10px;">MeasureSpec和View的工作原理</a> <a href="/tags/View/" style="font-size: 15px;">View</a> <a href="/tags/ViewRoot/" style="font-size: 10px;">ViewRoot</a> <a href="/tags/Window/" style="font-size: 10px;">Window</a> <a href="/tags/WindowManager/" style="font-size: 10px;">WindowManager</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/属性动画/" style="font-size: 10px;">属性动画</a> <a href="/tags/弹性滑动/" style="font-size: 10px;">弹性滑动</a> <a href="/tags/滑动冲突/" style="font-size: 10px;">滑动冲突</a> <a href="/tags/自定义View/" style="font-size: 10px;">自定义View</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.csdn.net/l664675249">CSDN_Blog</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://gank.io/">Gank</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">同济大学硕士在读，穷Geek，好奇至死，爱生活，致力于写一个牛闪闪的App(๑•̀ㅂ•́) ✧</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Spark Yuan</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/spark.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Spark Yuan</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/SparkYuan" title="GitHub"></a></li>
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:daniellee0929@gmail.com" title="Email"></a></li>
+                            
+                                <li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/u/2645327714" title="新浪微博"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-ViewRoot，DecorView，MeasureSpec和View的工作原理" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/11/ViewRoot，DecorView，MeasureSpec和View的工作原理/" class="article-date">
+      <time datetime="2016-03-11T11:40:56.483Z" itemprop="datePublished">2016-03-11</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ViewRoot，DecorView，MeasureSpec和View的工作原理
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DecorView/">DecorView</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MeasureSpec和View的工作原理/">MeasureSpec和View的工作原理</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ViewRoot/">ViewRoot</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>View的绘制流程是从ViewRoot的performTraversals方法开始的，它经过measure、layout和draw三个过程才能最终将一个View绘制出来，其中measure用来测量View的宽和高，layout用来确定View在父容器中的放置位置，而draw则负责将View绘制在屏幕上。<br><a id="more"></a></p>
+<p>View的绘制流程是从ViewRoot的performTraversals方法开始的，它经过measure、layout和draw三个过程才能最终将一个View绘制出来，其中measure用来测量View的宽和高，layout用来确定View在父容器中的放置位置，而draw则负责将View绘制在屏幕上。</p>
+<p>#ViewRoot和DecorView</p>
+<p>##ViewRoot</p>
+<ul>
+<li>ViewRoot对应ViewRootImpl类，它是连接WindowManager和DecorView的纽带，View的三大流程均通过ViewRoot来完成。</li>
+<li>ActivityThread中，Activity创建完成后，会将DecorView添加到Window中，同时创建ViewRootImpl对象，并建立两者的关联。</li>
+</ul>
+<p>##DecorView</p>
+<ul>
+<li>DecorView作为顶级View，一般情况下它<strong>内部</strong>包含一个竖直方向的LinearLayout，在这个LinearLayout里面有上下两个部分（具体情况和Android版本及主体有关），上面的是标题栏，下面的是内容栏。在Activity中通过setContentView所设置的布局文件其实就是被加到内容栏之中的，而内容栏的id是content，在代码中可以通过ViewGroup content = （ViewGroup)findViewById(R.android.id.content)来得到content对应的layout。</li>
+<li>DecorView其实是一个FrameLayout，View层的事件都先经过DecorView，然后才传递给我们的View。</li>
+</ul>
+<p>#MeasureSpec<br>在测量过程中，系统会将<strong>View的LayoutParams根据父容器所施加的规则转换成对应的MeasureSpec，然后再根据这个MeasureSpec来测量出View的宽和高。</strong>测量出来的宽和高不一定等于View最终的宽和高。<br>MeasureSpec将SpecMode和SpecSize打包成一个int值来避免过多的对象内存分配，高2位代表SpecMode，低30位代表SpecSize，SpecMode是指测量模式，而SpecSize是指在某种测量模式下的规格大小。</p>
+<p>SpecMode有三类：</p>
+<ul>
+<li>UNSPECIFIED：父容器不对View有任何限制，要多大给多大，这种情况一般用于系统内部，表示一种测量状态</li>
+<li>EXACTLY：父容器已经检测出View所需要的精确大小，这个时候View的最终大小就是SpecSize所指定的值。它对应于LayoutParams中的match_parent和具体的数值这两种模式</li>
+<li>AT_MOST：父容器指定了一个可用大小即SpecSize，View的大小不能大于这个值，具体是什么值要看不同View的具体实现。它对应于LayoutParams中的wrap_content。</li>
+</ul>
+<p>#普通MeasureSpec的创建规则<br><strong>对于普通View，其MeasureSpec由父容器的MeasureSpec和自身的LayoutParams来共同决定。</strong></p>
+<ul>
+<li>子View为精确宽高，无论父容器的MeasureSpec，子View的MeasureSpec都为精确值且遵循LayoutParams中的值。</li>
+<li>子View为match_parent时，如果父容器是精确模式，则子View也为精确模式且为父容器的剩余空间大小；如果父容器是最大模式，则子View也是最大模式且不会超过父容器的剩余空间。</li>
+<li>子View为wrap_content时，无论父View是精确还是最大模式，子View的模式总是最大模式，且不会超过父容器的剩余空间。</li>
+</ul>
+<p>#View的工作流程</p>
+<p>##measure<br>ViewGroup的measure方法会遍历每个子元素，并调用子元素内部的measure方法，measure源码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</span><br><span class="line">       setMeasuredDimension(getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec),</span><br><span class="line">               getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec));</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>注：</p>
+<ul>
+<li>getDefaultSize()返回MeasureSpec中的specSize，也就是View测量后的大小。</li>
+<li>getSuggestedMinimumWidth()，View如果没有背景，那么返回android:minWidth这个属性指定的值，这个值可以为0；如果设置了背景，则返回背景的最小宽度和minWidth中的<strong>最大值</strong>。</li>
+<li>getSuggestedMinimumHeight()，与getSuggestedMinimumWidth()类似。</li>
+<li>直接继承View的自定义控件需要重写onMeasure方法并设置wrap_content时的自身大小，否则在布局中使用wrap_content时就相当于使用match_parent。因为LayoutParams=wrap_content的情况下，MeasureSpec为AT_MOST，所以View的宽和高为父容器当前剩余的空间，这种效果与match_parent一致。<strong>具体处理方法要根据需求灵活决定。</strong></li>
+</ul>
+<p>###如何得到View的宽和高</p>
+<p>在Activity的onCreate、onStart、onResume方法中均无法正确得到某个View的宽/高信息，这是因为View的measure过程和Activity的生命周期方法不是同步执行的，因此无法保证Activity执行了onCreate、onStart、onResume时某个View就已经测量完毕了，如果View还没有测量完毕，那么获得的宽/高就是0。</p>
+<p>可以通过如下四个方法来解决这个问题：</p>
+<ul>
+<li>Activity或者View的onWindowFocusChanged方法（注意该方法会在Activity Pause和resume时被多次调用）</li>
+<li>view.post(new Runnable( {@Overidde public void run(){})})，在run方法中获取。</li>
+<li>ViewTreeObserver中的onGlobalLayoutListener中。</li>
+<li>手动调用View的measure方法。</li>
+</ul>
+<p>示例代码请参考原书P190页</p>
+<p>##layout<br>layout的作用是用来确定子视图在父视图中的位置。源码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">layout</span><span class="params">(<span class="keyword">int</span> l, <span class="keyword">int</span> t, <span class="keyword">int</span> r, <span class="keyword">int</span> b)</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">int</span> oldL = mLeft;  </span><br><span class="line">    <span class="keyword">int</span> oldT = mTop;  </span><br><span class="line">    <span class="keyword">int</span> oldB = mBottom;  </span><br><span class="line">    <span class="keyword">int</span> oldR = mRight;  </span><br><span class="line">    <span class="keyword">boolean</span> changed = setFrame(l, t, r, b);  </span><br><span class="line">    <span class="keyword">if</span> (changed || (mPrivateFlags &amp; LAYOUT_REQUIRED) == LAYOUT_REQUIRED) &#123;  </span><br><span class="line">        <span class="keyword">if</span> (ViewDebug.TRACE_HIERARCHY) &#123;  </span><br><span class="line">            ViewDebug.trace(<span class="keyword">this</span>, ViewDebug.HierarchyTraceType.ON_LAYOUT);  </span><br><span class="line">        &#125;  </span><br><span class="line">        onLayout(changed, l, t, r, b);  </span><br><span class="line">        mPrivateFlags &amp;= ~LAYOUT_REQUIRED;  </span><br><span class="line">        <span class="keyword">if</span> (mOnLayoutChangeListeners != <span class="keyword">null</span>) &#123;  </span><br><span class="line">            ArrayList&lt;OnLayoutChangeListener&gt; listenersCopy =  </span><br><span class="line">                    (ArrayList&lt;OnLayoutChangeListener&gt;) mOnLayoutChangeListeners.clone();  </span><br><span class="line">            <span class="keyword">int</span> numListeners = listenersCopy.size();  </span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; numListeners; ++i) &#123;  </span><br><span class="line">                listenersCopy.get(i).onLayoutChange(<span class="keyword">this</span>, l, t, r, b, oldL, oldT, oldR, oldB);  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    mPrivateFlags &amp;= ~FORCE_LAYOUT;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过setFrame()确定四个顶点的位置，进而确定View在父容器中的位置。</p>
+<p>在View的默认实现中，View的测量宽/高和最终宽/高是相等的，只不过测量宽/高形成于View的measure过程，而最终宽/高形成于View的layout过程，即两者的赋值时机不同，测量宽/高的赋值时机稍微早一些。多数情况下可以认为View的测量宽/高就等于最终的宽/高，但对于在View的layout中改变了View的left、top、right、bottom四个属性时，得出的测量宽/高有可能和最终的宽/高不一致。</p>
+<p>##draw<br>draw的过程很简单主要有以下几步：</p>
+<ul>
+<li>绘制背景(background.draw)</li>
+<li>绘制自己(onDraw)</li>
+<li>绘制children(dispatchDraw)</li>
+<li>绘制装饰(onDrawScrollBars)。</li>
+</ul>
+<p>源码如下<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">public void draw(Canvas canvas) &#123;  </span><br><span class="line">  </span><br><span class="line">        / * Draw traversal performs several drawing steps which must be executed  </span><br><span class="line">         * in the appropriate order:  </span><br><span class="line">         *  </span><br><span class="line">         *      1. Draw the background if need  </span><br><span class="line">         *      2. If necessary, save the canvas' layers to prepare for fading  </span><br><span class="line">         *      3. Draw view's content  </span><br><span class="line">         *      4. Draw children (dispatchDraw)  </span><br><span class="line">         *      5. If necessary, draw the fading edges and restore layers  </span><br><span class="line">         *      6. Draw decorations (scrollbars for instance)  </span><br><span class="line">         */  </span><br><span class="line">  </span><br><span class="line">       //Step 1, draw the background, if needed  </span><br><span class="line">        if (!dirtyOpaque) &#123;  </span><br><span class="line">            drawBackground(canvas);  </span><br><span class="line">        &#125;  </span><br><span class="line">  </span><br><span class="line">         // skip step 2 &amp; 5 if possible (common case)  </span><br><span class="line">        final int viewFlags = mViewFlags;  </span><br><span class="line">        if (!verticalEdges &amp;&amp; !horizontalEdges) &#123;  </span><br><span class="line">            // Step 3, draw the content  </span><br><span class="line">            if (!dirtyOpaque) onDraw(canvas);  </span><br><span class="line">  </span><br><span class="line">            // Step 4, draw the children  </span><br><span class="line">            dispatchDraw(canvas);  </span><br><span class="line">  </span><br><span class="line">            // Step 6, draw decorations (scrollbars)  </span><br><span class="line">            onDrawScrollBars(canvas);  </span><br><span class="line">  </span><br><span class="line">            if (mOverlay != null &amp;&amp; !mOverlay.isEmpty()) &#123;  </span><br><span class="line">                mOverlay.getOverlayView().dispatchDraw(canvas);  </span><br><span class="line">            &#125;  </span><br><span class="line">  </span><br><span class="line">            // we're done...  </span><br><span class="line">            return;  </span><br><span class="line">        &#125;  </span><br><span class="line">  </span><br><span class="line">        // Step 2, save the canvas' layers  </span><br><span class="line">        ...  </span><br><span class="line">  </span><br><span class="line">        // Step 3, draw the content  </span><br><span class="line">        if (!dirtyOpaque)   </span><br><span class="line">            onDraw(canvas);  </span><br><span class="line">  </span><br><span class="line">        // Step 4, draw the children  </span><br><span class="line">        dispatchDraw(canvas);  </span><br><span class="line">  </span><br><span class="line">        // Step 5, draw the fade effect and restore layers  </span><br><span class="line">  </span><br><span class="line">        // Step 6, draw decorations (scrollbars)  </span><br><span class="line">        onDrawScrollBars(canvas);  </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>注：</p>
+<ul>
+<li>View有一个特殊的方法setWillNotDraw，如果一个View不需要绘制任何内容，设置这个标记位true后，系统会进行优化。默认情况下，View没有启用这个优化标记位，但是ViewGroup会默认启用这个优化标记位。</li>
+<li>这个标记位对实际开发的意义是：如果自定义控件继承于ViewGroup并且本身不具备绘制功能时，就可以开启这个标记位从而便于系统进行后续的优化。当明确知道一个ViewGroup需要通过onDraw来绘制内容时，需要显示地关闭WILL_NOT_DRAW这个标记位。</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/03/11/ViewRoot，DecorView，MeasureSpec和View的工作原理/">ViewRoot，DecorView，MeasureSpec和View的工作原理</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Spark Yuan 的个人博客">Spark Yuan</a></p>
+        <p><span>发布时间:</span>2016年03月11日 - 19时40分</p>
+        <p><span>最后更新:</span>2016年03月11日 - 19时42分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/03/11/ViewRoot，DecorView，MeasureSpec和View的工作原理/" title="ViewRoot，DecorView，MeasureSpec和View的工作原理">http://sparkyuan.github.io/2016/03/11/ViewRoot，DecorView，MeasureSpec和View的工作原理/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://sparkyuan.github.io/2016/03/11/ViewRoot，DecorView，MeasureSpec和View的工作原理/　　作者: Spark Yuan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/03/11/AIDL/">
+                    属性动画
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/03/11/Meizi/">
+                    每日一妹子
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+    <div class="share">
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+    <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+    <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config={
+            "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+</div>
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="2016/03/11/ViewRoot，DecorView，MeasureSpec和View的工作原理/" data-title="ViewRoot，DecorView，MeasureSpec和View的工作原理" data-url="http://sparkyuan.github.io/2016/03/11/ViewRoot，DecorView，MeasureSpec和View的工作原理/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"sparkyuan"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/03/11/AIDL/" title="上一篇: 属性动画">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/03/11/Meizi/" title="下一篇: 每日一妹子">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/AIDL/">属性动画</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/ViewRoot，DecorView，MeasureSpec和View的工作原理/">ViewRoot，DecorView，MeasureSpec和View的工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/Meizi/">每日一妹子</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/View的工作原理/">View的工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/View的弹性滑动/">View的弹性滑动</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/一个规范的自定义View/">一个规范的自定义View</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/Windows和WindowManager/">Windows和WindowManager</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/View的滑动冲突/">View的滑动冲突</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/属性动画/">属性动画</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/View事件分发机制/">View事件分发机制</a></li></ul>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 Spark Yuan
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >本站到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
