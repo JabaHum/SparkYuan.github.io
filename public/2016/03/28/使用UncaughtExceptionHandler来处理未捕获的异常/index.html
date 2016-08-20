@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>使用UncaughtExceptionHandler来处理未捕获的异常 | Spark Yuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="所有的App都会发生crash，本文讲解的是如何采集crash信息以供后续开发处理这类问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用UncaughtExceptionHandler来处理未捕获的异常">
+<meta property="og:url" content="http://sparkyuan.github.io/2016/03/28/使用UncaughtExceptionHandler来处理未捕获的异常/index.html">
+<meta property="og:site_name" content="Spark Yuan">
+<meta property="og:description" content="所有的App都会发生crash，本文讲解的是如何采集crash信息以供后续开发处理这类问题。">
+<meta property="og:updated_time" content="2016-03-28T08:27:42.654Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用UncaughtExceptionHandler来处理未捕获的异常">
+<meta name="twitter:description" content="所有的App都会发生crash，本文讲解的是如何采集crash信息以供后续开发处理这类问题。">
+  
+    <link rel="alternative" href="/atom.xml" title="Spark Yuan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?fad7b300a96cfc818eb42b7f4f8a32de";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script>
+  
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/spark.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Spark Yuan</a></h1>
+        </hgroup>
+
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:daniellee0929@gmail.com" title="Email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/SparkYuan" title="github"></a></li>
+                            
+                                <li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/u/2645327714" title="新浪微博"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AIDL/" style="font-size: 10px;">AIDL</a> <a href="/tags/Activity/" style="font-size: 13.33px;">Activity</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Annotation/" style="font-size: 10px;">Annotation</a> <a href="/tags/AsyncTask/" style="font-size: 13.33px;">AsyncTask</a> <a href="/tags/BroadcastReceiver/" style="font-size: 10px;">BroadcastReceiver</a> <a href="/tags/ContentProvider/" style="font-size: 10px;">ContentProvider</a> <a href="/tags/HandlerThread/" style="font-size: 10px;">HandlerThread</a> <a href="/tags/IPC/" style="font-size: 10px;">IPC</a> <a href="/tags/IntentFilter/" style="font-size: 10px;">IntentFilter</a> <a href="/tags/IntentService/" style="font-size: 10px;">IntentService</a> <a href="/tags/Service/" style="font-size: 10px;">Service</a> <a href="/tags/Thread/" style="font-size: 10px;">Thread</a> <a href="/tags/View/" style="font-size: 16.67px;">View</a> <a href="/tags/Window/" style="font-size: 10px;">Window</a> <a href="/tags/WindowManager/" style="font-size: 10px;">WindowManager</a> <a href="/tags/apk/" style="font-size: 10px;">apk</a> <a href="/tags/crash/" style="font-size: 10px;">crash</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/匹配规则/" style="font-size: 10px;">匹配规则</a> <a href="/tags/安全机制/" style="font-size: 10px;">安全机制</a> <a href="/tags/属性动画/" style="font-size: 10px;">属性动画</a> <a href="/tags/弹性滑动/" style="font-size: 10px;">弹性滑动</a> <a href="/tags/深入理解JVM虚拟机/" style="font-size: 10px;">深入理解JVM虚拟机</a> <a href="/tags/源码剖析/" style="font-size: 10px;">源码剖析</a> <a href="/tags/自定义View/" style="font-size: 10px;">自定义View</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.csdn.net/l664675249">CSDN_Blog</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://gank.io/">Gank</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.jayfeng.com/">杰风居</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hujiaweibujidao.github.io/">五道口宅男</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.csdn.net/singwhatiwanna">任玉刚</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://droidyue.com/">技术小黑屋</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.liaohuqiu.net/">廖祜秋</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://drakeet.me/">Drakeet</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">同济大学硕士在读，穷Geek，好奇至死，爱生活，致力于写一个牛闪闪的App(๑•̀ㅂ•́) ✧</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Spark Yuan</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/spark.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Spark Yuan</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:daniellee0929@gmail.com" title="Email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/SparkYuan" title="github"></a></li>
+                            
+                                <li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/u/2645327714" title="新浪微博"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-使用UncaughtExceptionHandler来处理未捕获的异常" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/28/使用UncaughtExceptionHandler来处理未捕获的异常/" class="article-date">
+      <time datetime="2016-03-28T08:06:51.000Z" itemprop="datePublished">2016-03-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      使用UncaughtExceptionHandler来处理未捕获的异常
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android开发艺术探索笔记/">Android开发艺术探索笔记</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/crash/">crash</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>所有的App都会发生crash，本文讲解的是如何采集crash信息以供后续开发处理这类问题。<br><a id="more"></a></p>
+<h1 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h1><p>当crash发生时，系统会调用UncaughtExceptionHandler的uncaughtException方法，我们可以在这个方法中捕获异常信息，把异常信息存到SD卡中，在合适的时候通过网络把crash信息传回服务器，这样就可以分析crash原因，在后续的版本中解决。<br>先看一下Thread类中的一个方法，setDefaultUncaughtExceptionHandler</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setDefaultUncaughtExceptionHandler</span><span class="params">(UncaughtExceptionHandler handler)</span> </span>&#123;</span><br><span class="line">    Thread.defaultUncaughtHandler = handler;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>defaultUncaughtHandler是Thread类的静态成员变量，所以如果我们将自定义的UncaughtExceptionHandler设置给Thread的话，那么当前进程内的所有线程都能使用这个UncaughtExceptionHandler来处理异常了。</p>
+<h1 id="CrashHandler"><a href="#CrashHandler" class="headerlink" title="CrashHandler"></a>CrashHandler</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CrashHandler</span> <span class="keyword">implements</span> <span class="title">UncaughtExceptionHandler</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"CrashHandler"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">boolean</span> DEBUG = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String PATH = Environment.getExternalStorageDirectory().getPath() + <span class="string">"/CrashTest/log/"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String FILE_NAME = <span class="string">"crash"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String FILE_NAME_SUFFIX = <span class="string">".trace"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> CrashHandler sInstance = <span class="keyword">new</span> CrashHandler();</span><br><span class="line">    <span class="keyword">private</span> UncaughtExceptionHandler mDefaultCrashHandler;</span><br><span class="line">    <span class="keyword">private</span> Context mContext;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">CrashHandler</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CrashHandler <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sInstance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//需要初始化的单例</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        mDefaultCrashHandler = Thread.getDefaultUncaughtExceptionHandler();</span><br><span class="line">        Thread.setDefaultUncaughtExceptionHandler(<span class="keyword">this</span>);</span><br><span class="line">        mContext = context.getApplicationContext();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 这个是最关键的函数，当程序中有未被捕获的异常，系统将会自动调用#uncaughtException方法</span><br><span class="line">     * thread为出现未捕获异常的线程，ex为未捕获的异常，有了这个ex，我们就可以得到异常信息。</span><br><span class="line">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">uncaughtException</span><span class="params">(Thread thread, Throwable ex)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//导出异常信息到SD卡中</span></span><br><span class="line">            dumpExceptionToSDCard(ex);</span><br><span class="line">            uploadExceptionToServer();</span><br><span class="line">            <span class="comment">//这里可以通过网络上传异常信息到服务器，便于开发人员分析日志从而解决bug</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ex.printStackTrace();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己</span></span><br><span class="line">        <span class="keyword">if</span> (mDefaultCrashHandler != <span class="keyword">null</span>) &#123;</span><br><span class="line">            mDefaultCrashHandler.uncaughtException(thread, ex);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Process.killProcess(Process.myPid());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">dumpExceptionToSDCard</span><span class="params">(Throwable ex)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="comment">//如果SD卡不存在或无法使用，则无法把异常信息写入SD卡</span></span><br><span class="line">        <span class="keyword">if</span> (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (DEBUG) &#123;</span><br><span class="line">                Log.w(TAG, <span class="string">"sdcard unmounted,skip dump exception"</span>);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        File dir = <span class="keyword">new</span> File(PATH);</span><br><span class="line">        <span class="keyword">if</span> (!dir.exists()) &#123;</span><br><span class="line">            dir.mkdirs();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">long</span> current = System.currentTimeMillis();</span><br><span class="line">        String time = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>).format(<span class="keyword">new</span> Date(current));</span><br><span class="line">        File file = <span class="keyword">new</span> File(PATH + FILE_NAME + time + FILE_NAME_SUFFIX);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            PrintWriter pw = <span class="keyword">new</span> PrintWriter(<span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> FileWriter(file)));</span><br><span class="line">            pw.println(time);</span><br><span class="line">            dumpPhoneInfo(pw);</span><br><span class="line">            pw.println();</span><br><span class="line">            ex.printStackTrace(pw);</span><br><span class="line">            pw.close();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            Log.e(TAG, <span class="string">"dump crash info failed"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">dumpPhoneInfo</span><span class="params">(PrintWriter pw)</span> <span class="keyword">throws</span> NameNotFoundException </span>&#123;</span><br><span class="line">        PackageManager pm = mContext.getPackageManager();</span><br><span class="line">        PackageInfo pi = pm.getPackageInfo(mContext.getPackageName(), PackageManager.GET_ACTIVITIES);</span><br><span class="line">        pw.print(<span class="string">"App Version: "</span>);</span><br><span class="line">        pw.print(pi.versionName);</span><br><span class="line">        pw.print(<span class="string">'_'</span>);</span><br><span class="line">        pw.println(pi.versionCode);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//android版本号</span></span><br><span class="line">        pw.print(<span class="string">"OS Version: "</span>);</span><br><span class="line">        pw.print(Build.VERSION.RELEASE);</span><br><span class="line">        pw.print(<span class="string">"_"</span>);</span><br><span class="line">        pw.println(Build.VERSION.SDK_INT);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//手机制造商</span></span><br><span class="line">        pw.print(<span class="string">"Vendor: "</span>);</span><br><span class="line">        pw.println(Build.MANUFACTURER);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//手机型号</span></span><br><span class="line">        pw.print(<span class="string">"Model: "</span>);</span><br><span class="line">        pw.println(Build.MODEL);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//cpu架构</span></span><br><span class="line">        pw.print(<span class="string">"CPU ABI: "</span>);</span><br><span class="line">        pw.println(Build.CPU_ABI);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">uploadExceptionToServer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="comment">//TODO Upload Exception Message To Your Web Server</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h1><p>在Application的onCreate方法中配置一下就可以<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestApp</span> <span class="keyword">extends</span> <span class="title">Application</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> TestApp sInstance;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate();</span><br><span class="line">        sInstance = <span class="keyword">this</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//在这里为应用设置异常处理程序，然后我们的程序才能捕获未处理的异常</span></span><br><span class="line">        CrashHandler crashHandler = CrashHandler.getInstance();</span><br><span class="line">        crashHandler.init(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> TestApp <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sInstance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/03/28/使用UncaughtExceptionHandler来处理未捕获的异常/">使用UncaughtExceptionHandler来处理未捕获的异常</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Spark Yuan 的个人博客">Spark Yuan</a></p>
+        <p><span>发布时间:</span>2016年03月28日 - 16时06分</p>
+        <p><span>最后更新:</span>2016年03月28日 - 16时27分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/03/28/使用UncaughtExceptionHandler来处理未捕获的异常/" title="使用UncaughtExceptionHandler来处理未捕获的异常">http://sparkyuan.github.io/2016/03/28/使用UncaughtExceptionHandler来处理未捕获的异常/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://sparkyuan.github.io/2016/03/28/使用UncaughtExceptionHandler来处理未捕获的异常/　　作者: Spark Yuan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/04/01/从源码到APK/">
+                    从源码到apk——apk打包过程
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/03/25/Android的线程和线程池/">
+                    Android的线程和线程池
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基本思路"><span class="toc-number">1.</span> <span class="toc-text">基本思路</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CrashHandler"><span class="toc-number">2.</span> <span class="toc-text">CrashHandler</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用方法"><span class="toc-number">3.</span> <span class="toc-text">使用方法</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+    <div class="share">
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+    <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+    <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config={
+            "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+</div>
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="2016/03/28/使用UncaughtExceptionHandler来处理未捕获的异常/" data-title="使用UncaughtExceptionHandler来处理未捕获的异常" data-url="http://sparkyuan.github.io/2016/03/28/使用UncaughtExceptionHandler来处理未捕获的异常/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"sparkyuan"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/04/01/从源码到APK/" title="上一篇: 从源码到apk——apk打包过程">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/03/25/Android的线程和线程池/" title="下一篇: Android的线程和线程池">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/06/10/自定义注解的例子/">一个自定义注解的例子</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/22/JVM运行时数据区域/">JVM运行时数据区域</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/05/Android安全机制/">Android安全机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/从源码到APK/">从源码到apk——apk打包过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/28/使用UncaughtExceptionHandler来处理未捕获的异常/">使用UncaughtExceptionHandler来处理未捕获的异常</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/25/Android的线程和线程池/">Android的线程和线程池</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/23/AsyncTask源码剖析(API 23)/">AsyncTask源码剖析(API 23)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/四大组件的工作过程/">从源码的角度理解四大组件的工作过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/AIDL/">AIDL</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/Meizi/">每日一妹子</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/Windows和WindowManager/">Windows和WindowManager</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/View的工作原理/">ViewRoot、DecorView、MeasureSpec和View的工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/属性动画/">属性动画</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/View事件分发机制/">View事件分发机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/View的弹性滑动/">View的弹性滑动</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/一个规范的自定义View/">一个规范的自定义View</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/06/IntentFilter匹配规则/">IntentFilter匹配规则详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/05/Activity在异常情况下的生命周期/">Activity在异常情况下的生命周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/04/我的Android Studio的配置/">我的Android Studio配置</a></li></ul>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 Spark Yuan
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

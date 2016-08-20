@@ -1,4 +1,5 @@
 title: Windows和WindowManager
+date: 2016/3/11 20:46:25
 categories:
 - Android
 - Android开发艺术探索笔记
@@ -9,8 +10,6 @@ tags:
 ---
 Window表示一个窗口的概念，在某些特殊的时候，比如你需要在桌面或者锁屏上显示一些类似悬浮窗的东西时候就需要用到Window。Window是一个抽象类，Window的实现类是PhoneWindow。Window的具体实现位于WindowManagerService中，WindowManager和WindowManagerService的交互是一个IPC过程。Android中所有的视图都是通过Window来呈现的，不管是Activity、Dialog还是Toast，他们的视图实际上都是附加在Window上的。
 <!-- more -->
-
-Window表示一个窗口的概念，在某些特殊的时候，比如你需要在桌面或者锁屏上显示一些类似悬浮窗的东西时候就需要用到Window。Window是一个抽象类，Window的实现类是PhoneWindow。Window的具体实现位于WindowManagerService中，WindowManager和WindowManagerService的交互是一个IPC过程。Android中所有的视图都是通过Window来呈现的，不管是Activity、Dialog还是Toast，他们的视图实际上都是附加在Window上的。
 
 #一个悬浮窗的例子
 

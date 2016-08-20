@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>从源码的角度理解四大组件的工作过程 | Spark Yuan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="系统对四大组件的过程进行了很大程度的封装，日常开发中并不需要了解底层的工作原理，那么研究这些原理的意义在哪里呢？
+
+如果你想在技术上更进一步，那么了解一些系统的工作原理是十分必要的，也是开发人员日后成长为高级工程师所必备的技术能力。
+Android作为一个优秀的基于Linux操作系统，其内部一定有很多值得我们学习的地方，通过对Android操作系统的学习对提高开发人员的内功有很大的好处。
+如果你从">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从源码的角度理解四大组件的工作过程">
+<meta property="og:url" content="http://sparkyuan.github.io/2016/03/14/四大组件的工作过程/index.html">
+<meta property="og:site_name" content="Spark Yuan">
+<meta property="og:description" content="系统对四大组件的过程进行了很大程度的封装，日常开发中并不需要了解底层的工作原理，那么研究这些原理的意义在哪里呢？
+
+如果你想在技术上更进一步，那么了解一些系统的工作原理是十分必要的，也是开发人员日后成长为高级工程师所必备的技术能力。
+Android作为一个优秀的基于Linux操作系统，其内部一定有很多值得我们学习的地方，通过对Android操作系统的学习对提高开发人员的内功有很大的好处。
+如果你从">
+<meta property="og:image" content="http://sparkyuan.github.io/images/Activity_UML.png">
+<meta property="og:image" content="http://sparkyuan.github.io/images/service_UML.png">
+<meta property="og:image" content="http://sparkyuan.github.io/images/service_UML2.png">
+<meta property="og:image" content="http://sparkyuan.github.io/images/Broadcast_UML.png">
+<meta property="og:image" content="http://sparkyuan.github.io/images/Broadcast_UML2.png">
+<meta property="og:image" content="http://sparkyuan.github.io/images/qidong.png">
+<meta property="og:image" content="http://sparkyuan.github.io/images/contentprovider_UML.png">
+<meta property="og:updated_time" content="2016-03-15T02:19:05.149Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从源码的角度理解四大组件的工作过程">
+<meta name="twitter:description" content="系统对四大组件的过程进行了很大程度的封装，日常开发中并不需要了解底层的工作原理，那么研究这些原理的意义在哪里呢？
+
+如果你想在技术上更进一步，那么了解一些系统的工作原理是十分必要的，也是开发人员日后成长为高级工程师所必备的技术能力。
+Android作为一个优秀的基于Linux操作系统，其内部一定有很多值得我们学习的地方，通过对Android操作系统的学习对提高开发人员的内功有很大的好处。
+如果你从">
+<meta name="twitter:image" content="http://sparkyuan.github.io/images/Activity_UML.png">
+  
+    <link rel="alternative" href="/atom.xml" title="Spark Yuan" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?fad7b300a96cfc818eb42b7f4f8a32de";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script>
+  
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/spark.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Spark Yuan</a></h1>
+        </hgroup>
+
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:daniellee0929@gmail.com" title="Email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/SparkYuan" title="github"></a></li>
+                            
+                                <li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/u/2645327714" title="新浪微博"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AIDL/" style="font-size: 10px;">AIDL</a> <a href="/tags/Activity/" style="font-size: 13.33px;">Activity</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Annotation/" style="font-size: 10px;">Annotation</a> <a href="/tags/AsyncTask/" style="font-size: 13.33px;">AsyncTask</a> <a href="/tags/BroadcastReceiver/" style="font-size: 10px;">BroadcastReceiver</a> <a href="/tags/ContentProvider/" style="font-size: 10px;">ContentProvider</a> <a href="/tags/HandlerThread/" style="font-size: 10px;">HandlerThread</a> <a href="/tags/IPC/" style="font-size: 10px;">IPC</a> <a href="/tags/IntentFilter/" style="font-size: 10px;">IntentFilter</a> <a href="/tags/IntentService/" style="font-size: 10px;">IntentService</a> <a href="/tags/Service/" style="font-size: 10px;">Service</a> <a href="/tags/Thread/" style="font-size: 10px;">Thread</a> <a href="/tags/View/" style="font-size: 16.67px;">View</a> <a href="/tags/Window/" style="font-size: 10px;">Window</a> <a href="/tags/WindowManager/" style="font-size: 10px;">WindowManager</a> <a href="/tags/apk/" style="font-size: 10px;">apk</a> <a href="/tags/crash/" style="font-size: 10px;">crash</a> <a href="/tags/事件分发机制/" style="font-size: 10px;">事件分发机制</a> <a href="/tags/匹配规则/" style="font-size: 10px;">匹配规则</a> <a href="/tags/安全机制/" style="font-size: 10px;">安全机制</a> <a href="/tags/属性动画/" style="font-size: 10px;">属性动画</a> <a href="/tags/弹性滑动/" style="font-size: 10px;">弹性滑动</a> <a href="/tags/深入理解JVM虚拟机/" style="font-size: 10px;">深入理解JVM虚拟机</a> <a href="/tags/源码剖析/" style="font-size: 10px;">源码剖析</a> <a href="/tags/自定义View/" style="font-size: 10px;">自定义View</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.csdn.net/l664675249">CSDN_Blog</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://gank.io/">Gank</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.jayfeng.com/">杰风居</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hujiaweibujidao.github.io/">五道口宅男</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.csdn.net/singwhatiwanna">任玉刚</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://droidyue.com/">技术小黑屋</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.liaohuqiu.net/">廖祜秋</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://drakeet.me/">Drakeet</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">同济大学硕士在读，穷Geek，好奇至死，爱生活，致力于写一个牛闪闪的App(๑•̀ㅂ•́) ✧</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Spark Yuan</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/spark.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Spark Yuan</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:daniellee0929@gmail.com" title="Email"></a></li>
+                            
+                                <li id="github"><a class="github" target="_blank" href="https://github.com/SparkYuan" title="github"></a></li>
+                            
+                                <li id="新浪微博"><a class="新浪微博" target="_blank" href="http://weibo.com/u/2645327714" title="新浪微博"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-四大组件的工作过程" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/14/四大组件的工作过程/" class="article-date">
+      <time datetime="2016-03-14T14:35:04.000Z" itemprop="datePublished">2016-03-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      从源码的角度理解四大组件的工作过程
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android开发艺术探索笔记/">Android开发艺术探索笔记</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Activity/">Activity</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/BroadcastReceiver/">BroadcastReceiver</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ContentProvider/">ContentProvider</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Service/">Service</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>系统对四大组件的过程进行了很大程度的封装，日常开发中并不需要了解底层的工作原理，那么研究这些原理的意义在哪里呢？</p>
+<ul>
+<li>如果你想在技术上更进一步，那么了解一些系统的工作原理是十分必要的，也是开发人员日后成长为高级工程师所必备的技术能力。</li>
+<li>Android作为一个优秀的基于Linux操作系统，其内部一定有很多值得我们学习的地方，通过对Android操作系统的学习对提高开发人员的内功有很大的好处。</li>
+<li>如果你从事Android Rom开发，那就没什么好说的了，看源码吧。</li>
+</ul>
+<p>本文侧重于对四大组件工作过程的分析，通过分析他们的工作过程理解系统内部运行机制，加深我们对Android整体系统结构的认识。<br><a id="more"></a></p>
+<p>本文中的UML图来自<a href="http://blog.csdn.net/amurocrash" target="_blank" rel="external">@amurocrash</a>，感谢amurocrash。<br>Android相关部分的源码实在是太多，全部贴上了太过繁琐，所以借用了amurocrash同学的UML图使得整个流程更加容易理解。</p>
+<h1 id="四大组件的运行状态"><a href="#四大组件的运行状态" class="headerlink" title="四大组件的运行状态"></a>四大组件的运行状态</h1><ul>
+<li>Activity的主要作用是展示一个界面并和用户交互，它扮演的是一种前台界面的角色。</li>
+<li>Service是一种计算型组件，用于在后台执行一系列计算任务。Service有两种状态：启动状态和绑定状态。启动状态时的Service不需要与外界交互，绑定状态的Service可以方便的和Service组件进行通信。<strong>Service是运行在主线程中的</strong>，因此耗时的后台计算仍然需要在单独的线程中去完成。灵活采用stopService和unBindService这两个方法才能完全停止一个Service组件。</li>
+<li>BroadcastReceiver是一种消息型组件，用于在不同的组件乃至不同的应用之间传递消息。广播注册有静态和动态两种方式，动态注册通过Context.registerReceiver()来实现，不需要时通过Contex.unRegisterReceiver()来解除广播，这种方式必须要应用启动才能注册；静态注册则在AndroidManifest文件中进行，应用安装时会被系统解析，不需要启动应用就可接收广播。匹配过程是通过<intent-filter>来描述的。</intent-filter></li>
+<li>ContentProvider是一种共享型组件，用于向其他组件乃至其他应用共享数据。它内部维持着一份数据集合，并需要实现增删改查这四种操作，这个数据集合既可以通过数据库来实现，也可以采用其他类型来实现，比如List，Map等。需要注意的是，增删改查要处理好线程同步，这几个方法是在Binder线程池中被调用的，另外，ContentProvider不需要手动停止。</li>
+</ul>
+<h1 id="Activity的工作过程"><a href="#Activity的工作过程" class="headerlink" title="Activity的工作过程"></a>Activity的工作过程</h1><p><img src="/images/Activity_UML.png" alt="UML图"></p>
+<p>注</p>
+<ul>
+<li>启动Activity的真实实现是由ActivityManagerNative.getDefault().startActivity方法来完成的。这个方法返回ActivityManagerService。</li>
+<li>ActivityManagerService（AMS）继承自ActivityManagerNative，而ActivityManagerNative继承自Binder并实现了IActivityManager这个Binder接口，因此AMS也是一个Binder。</li>
+<li>AMS这个Binder对象采用单例模式对外提供，第一次调用它的get方法时会通过create方法初始化，后续调用中直接返回之前创建的对象。</li>
+<li>从makeApplication的实现可以看出，如果Application已经被创建过了，那么就不会再重复创建，这也意味着一个应用只有一个Application对象。Application的创建也是通过Instrumentation来完成的，这个过程和Activity对象的创建过程一样，都是通过类加载器来实现的。</li>
+<li>ContextImpl是Context的具体实现，ContextImpl是通过Activity的attach方法来和Activity建立关联的，在attach方法中Activity还会完成Window的创建并建立自己和Window的关联，这样当Activity接受到事件就可以传递给window了。</li>
+</ul>
+<h1 id="Service的工作过程"><a href="#Service的工作过程" class="headerlink" title="Service的工作过程"></a>Service的工作过程</h1><h2 id="启动过程"><a href="#启动过程" class="headerlink" title="启动过程"></a>启动过程</h2><p><img src="/images/service_UML.png" alt="启动过程"></p>
+<h2 id="绑定过程"><a href="#绑定过程" class="headerlink" title="绑定过程"></a>绑定过程</h2><p><img src="/images/service_UML2.png" alt="绑定过程"><br>注</p>
+<ul>
+<li>Service有两种状态：启动状态和绑定状态，两种状态是可以共存的。</li>
+</ul>
+<h1 id="BroadcastReceiver的工作过程"><a href="#BroadcastReceiver的工作过程" class="headerlink" title="BroadcastReceiver的工作过程"></a>BroadcastReceiver的工作过程</h1><p>BroadcastReceiver的工作过程包括广播注册过程、广播发送和接收过程。</p>
+<h2 id="动态注册"><a href="#动态注册" class="headerlink" title="动态注册"></a>动态注册</h2><p><img src="/images/Broadcast_UML.png" alt="动态注册"></p>
+<h2 id="发送和接收"><a href="#发送和接收" class="headerlink" title="发送和接收"></a>发送和接收</h2><p><img src="/images/Broadcast_UML2.png" alt="发送"></p>
+<p>注：</p>
+<ul>
+<li>静态注册是由PackageManagerService（PMS）在应用安装的时候完成整个注册过程的，除广播以外，其他三大组件也都是在应用安装时由PMS解析并注册的。</li>
+<li>广播的发送有几种类型：普通广播、有序广播和粘性广播，有序广播和粘性广播与普通广播相比具有不同的特性，但是发送和接收过程是类似的。</li>
+<li>FLAG_INCLUDE_STOPPED_PACKAGES:广播会发送给已经停止的应用，FLAG_EXCLUDE_STOPPED_PACKAGES广播不会发送给已经停止的应用</li>
+<li>从Android 3.1开始，处于停止状态的应用无法接受到开机广播。</li>
+</ul>
+<h1 id="ContentProvider"><a href="#ContentProvider" class="headerlink" title="ContentProvider"></a>ContentProvider</h1><h2 id="启动过程-1"><a href="#启动过程-1" class="headerlink" title="启动过程"></a>启动过程</h2><p><img src="/images/qidong.png" alt="启动过程"></p>
+<ul>
+<li>当ContentProvider所在的进程启动时，会同时被启动并被发布到AMS中，需要注意的是，这个时候它的onCreate要先去Application的onCreate执行，这在四大组件中是一个少有的现象。</li>
+<li>用启动的入口为ActivityThread的main方法，main方法会创建ActivityThread实例并创建主线程消息队列。</li>
+<li>attach方法中远程调用AMS的attachApplication方法，并提供ApplicationThread用于和AMS的通信。 </li>
+<li>attachApplication方法会通过bindApplication方法和H来调回ActivityThread的handleBindApplication，这个方法会先创建Application，再加载ContentProvider，然后才会回调Application的onCreate方法。</li>
+<li>ContentProvider的multiprocess属性决定了ContentProvider是否是单例（false时），一般都用单例。</li>
+<li>ontentResolver的具体类是ApplicationContentResolver，当ContentProvider所在进程未启动时，第一次访问它会触发ContentProvider的创建以及进程启动。</li>
+</ul>
+<h2 id="Query流程"><a href="#Query流程" class="headerlink" title="Query流程"></a>Query流程</h2><p><img src="/images/contentprovider_UML.png" alt="query"></p>
+<p>insert，delete和update方法类似，这里就不在分析了。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/03/14/四大组件的工作过程/">从源码的角度理解四大组件的工作过程</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Spark Yuan 的个人博客">Spark Yuan</a></p>
+        <p><span>发布时间:</span>2016年03月14日 - 22时35分</p>
+        <p><span>最后更新:</span>2016年03月15日 - 10时19分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/03/14/四大组件的工作过程/" title="从源码的角度理解四大组件的工作过程">http://sparkyuan.github.io/2016/03/14/四大组件的工作过程/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://sparkyuan.github.io/2016/03/14/四大组件的工作过程/　　作者: Spark Yuan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/03/23/AsyncTask源码剖析(API 23)/">
+                    AsyncTask源码剖析(API 23)
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/03/11/Meizi/">
+                    每日一妹子
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#四大组件的运行状态"><span class="toc-number">1.</span> <span class="toc-text">四大组件的运行状态</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Activity的工作过程"><span class="toc-number">2.</span> <span class="toc-text">Activity的工作过程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Service的工作过程"><span class="toc-number">3.</span> <span class="toc-text">Service的工作过程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#启动过程"><span class="toc-number">3.1.</span> <span class="toc-text">启动过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#绑定过程"><span class="toc-number">3.2.</span> <span class="toc-text">绑定过程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#BroadcastReceiver的工作过程"><span class="toc-number">4.</span> <span class="toc-text">BroadcastReceiver的工作过程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#动态注册"><span class="toc-number">4.1.</span> <span class="toc-text">动态注册</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发送和接收"><span class="toc-number">4.2.</span> <span class="toc-text">发送和接收</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ContentProvider"><span class="toc-number">5.</span> <span class="toc-text">ContentProvider</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#启动过程-1"><span class="toc-number">5.1.</span> <span class="toc-text">启动过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Query流程"><span class="toc-number">5.2.</span> <span class="toc-text">Query流程</span></a></li></ol></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+    <div class="share">
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+    <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+    <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config={
+            "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+</div>
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="2016/03/14/四大组件的工作过程/" data-title="从源码的角度理解四大组件的工作过程" data-url="http://sparkyuan.github.io/2016/03/14/四大组件的工作过程/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"sparkyuan"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/03/23/AsyncTask源码剖析(API 23)/" title="上一篇: AsyncTask源码剖析(API 23)">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/03/11/Meizi/" title="下一篇: 每日一妹子">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/06/10/自定义注解的例子/">一个自定义注解的例子</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/22/JVM运行时数据区域/">JVM运行时数据区域</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/05/Android安全机制/">Android安全机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/从源码到APK/">从源码到apk——apk打包过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/28/使用UncaughtExceptionHandler来处理未捕获的异常/">使用UncaughtExceptionHandler来处理未捕获的异常</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/25/Android的线程和线程池/">Android的线程和线程池</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/23/AsyncTask源码剖析(API 23)/">AsyncTask源码剖析(API 23)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/四大组件的工作过程/">从源码的角度理解四大组件的工作过程</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/AIDL/">AIDL</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/Meizi/">每日一妹子</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/Windows和WindowManager/">Windows和WindowManager</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/View的工作原理/">ViewRoot、DecorView、MeasureSpec和View的工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/属性动画/">属性动画</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/View事件分发机制/">View事件分发机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/View的弹性滑动/">View的弹性滑动</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/11/一个规范的自定义View/">一个规范的自定义View</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/06/IntentFilter匹配规则/">IntentFilter匹配规则详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/05/Activity在异常情况下的生命周期/">Activity在异常情况下的生命周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/04/我的Android Studio的配置/">我的Android Studio配置</a></li></ul>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 Spark Yuan
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

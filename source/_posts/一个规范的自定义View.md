@@ -1,4 +1,5 @@
 title: 一个规范的自定义View
+date: 2016/3/11 20:46:25
 categories:
 - Android
 - Android开发艺术探索笔记

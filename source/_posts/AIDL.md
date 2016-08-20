@@ -1,4 +1,5 @@
-title: 属性动画
+title: AIDL
+date: 2016/3/11 20:46:25
 categories:
 - Android
 - Android开发艺术探索笔记
@@ -6,14 +7,13 @@ tags:
 - AIDL
 - IPC
 ---
-Android Interface Definition Language (AIDL)， Android接口定义语言。系统中的进程之间不能共享内存，因此，需要提供一些机制在不同进程之间进行数据通信Interprocess communication (IPC)。AIDL就是解决这个问题的。
-<!-- more -->
 
-#介绍
+# 介绍
 Android Interface Definition Language (AIDL)， Android接口定义语言。系统中的进程之间不能共享内存，因此，需要提供一些机制在不同进程之间进行数据通信Interprocess communication (IPC)。AIDL就是解决这个问题的。
 阅读本文需要了解Service的相关知识，关于Service的讲解请参考[http://blog.csdn.net/l664675249/article/details/48899323](http://blog.csdn.net/l664675249/article/details/48899323)
+<!-- more -->
 
-#创建.aidl文件
+# 创建.aidl文件
 aidl是用Java语法编写的，后缀为.aidl的文件。
 
 - 每一个aidl文件必须定义一个接口，在这个接口里声明方法
@@ -21,7 +21,7 @@ aidl是用Java语法编写的，后缀为.aidl的文件。
 - aidl支持基本的数据类型，当你需要使用额外的数据类型时需要把它们import进来，即使它们跟这个文件在同一个包中。
 
 
-##示例
+## 示例
 
 ```java
 // IRemoteService.aidl
@@ -43,7 +43,7 @@ interface IRemoteService {
 ```
 
 把aidl文件存在src/目录下，当你build项目的时候，SDK工具会在gen/目录下生成一个与.aidl文件名字相同的.java文件。
-#实现接口
+# 实现接口
 生成的IRemoteService.java如下
 
 ```java
@@ -177,7 +177,7 @@ private final IRemoteService.Stub mBinder = new IRemoteService.Stub() {
 - 默认情况下，请求是同步的，所以尽量不要在主线程中发出请求
 - 所有的异常都不会返回给请求者（Caller）
 
-#在Client中使用接口
+# 在Client中使用接口
 当你已经实现你的Service之后，你需把它暴露在Client中使Client可以绑定它。继承Service并实现onBind()方法，来返回一个实现了Stub的实例。下面就是一个把IRemoteService暴露给Client的例子：
 
 ```java
@@ -226,7 +226,7 @@ private ServiceConnection mConnection = new ServiceConnection() {
 ```
 注：
 如果Service和Client在两个不同的Application中，Client的Application的src/目录下必须也有对应的.aidl文件。
-#一个Client的例子
+# 一个Client的例子
 ```java
 public static class Binding extends Activity {
     /** The primary interface we will be calling on the service. */

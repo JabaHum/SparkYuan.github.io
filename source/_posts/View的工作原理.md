@@ -1,4 +1,5 @@
-title: View的工作原理
+title: ViewRoot、DecorView、MeasureSpec和View的工作原理
+date: 2016/3/11 20:46:25
 categories:
 - Android
 - Android开发艺术探索笔记
@@ -8,7 +9,6 @@ tags:
 ---
 View的绘制流程是从ViewRoot的performTraversals方法开始的，它经过measure、layout和draw三个过程才能最终将一个View绘制出来，其中measure用来测量View的宽和高，layout用来确定View在父容器中的放置位置，而draw则负责将View绘制在屏幕上。
 <!-- more -->
-View的绘制流程是从ViewRoot的performTraversals方法开始的，它经过measure、layout和draw三个过程才能最终将一个View绘制出来，其中measure用来测量View的宽和高，layout用来确定View在父容器中的放置位置，而draw则负责将View绘制在屏幕上。
 
 # ViewRoot和DecorView
 ## ViewRoot
@@ -33,7 +33,7 @@ SpecMode有三类：
 **对于普通View，其MeasureSpec由父容器的MeasureSpec和自身的LayoutParams来共同决定。**
 
 - 子View为精确宽高，无论父容器的MeasureSpec，子View的MeasureSpec都为精确值且遵循LayoutParams中的值。
-- 子View为match_parent时，如果父容器是精确模式，则子View也为精确模式且为父容器的剩余空间大小；如果父容器是最大模式，则子View也是wrap_content且不会超过父容器的剩余空间。
+- 子View为match_parent时，如果父容器是精确模式，则子View也为精确模式且为父容器的剩余空间大小；如果父容器是最大模式，则子View也是最大模式且其大小不会超过父容器的剩余空间。
 - 子View为wrap_content时，无论父View是精确还是最大模式，子View的模式总是最大模式，且不会超过父容器的剩余空间。
 
 # View的工作流程

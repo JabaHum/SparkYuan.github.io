@@ -1,4 +1,5 @@
 title: View事件分发机制
+date: 2016/3/11 20:46:25
 categories:
 - Android
 - Android开发艺术探索笔记
@@ -7,11 +8,10 @@ tags:
 - View
 - 事件分发机制
 ---
-点击事件的事件分发就是对MotionEvent事件的分发过程，当一个MotionEvent产生了以后，系统需要把这个事件传递给一个具体的View，而这个传递的过程就是分发的过程。
-<!-- more -->
 
 # 介绍
 点击事件的事件分发就是对MotionEvent事件的分发过程，当一个MotionEvent产生了以后，系统需要把这个事件传递给一个具体的View，而这个传递的过程就是分发的过程。
+<!-- more -->
 
 # 涉及到的三个方法
 
