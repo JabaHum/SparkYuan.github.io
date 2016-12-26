@@ -75,12 +75,7 @@ var _hmt = _hmt || [];
     			
             
     			
-    			<a data-idx="1" q-on="click: openSlider(e, 'friends')" href="javascript:void(0)">友链</a>
-    			
-    			
-            
-    			
-    			<a data-idx="2" q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">关于我</a>
+    			<a data-idx="1" q-on="click: openSlider(e, 'aboutme')" href="javascript:void(0)">关于我</a>
     			
     			
             
@@ -211,6 +206,67 @@ var _hmt = _hmt || [];
 
 
   
+    <article id="post-View的工作原理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/11/View的工作原理/">ViewRoot、DecorView、MeasureSpec和View的工作原理</a>
+    </h1>
+  
+
+        <a href="/2016/03/11/View的工作原理/" class="archive-article-date">
+  	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>View的绘制流程是从ViewRoot的performTraversals方法开始的，它经过measure、layout和draw三个过程才能最终将一个View绘制出来，其中measure用来测量View的宽和高，layout用来确定View在父容器中的放置位置，而draw则负责将View绘制在屏幕上。<br>
+        
+          <a class="article-more-a" href="/2016/03/11/View的工作原理/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View/">View</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<i class="icon-book icon"></i>
+	<a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android开发艺术探索笔记/">Android开发艺术探索笔记</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/03/11/View的工作原理/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-Windows和WindowManager" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -255,189 +311,6 @@ var _hmt = _hmt || [];
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2016/03/11/Windows和WindowManager/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-一个规范的自定义View" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/11/一个规范的自定义View/">一个规范的自定义View</a>
-    </h1>
-  
-
-        <a href="/2016/03/11/一个规范的自定义View/" class="archive-article-date">
-  	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一个规范的自定义View<br>
-        
-          <a class="article-more-a" href="/2016/03/11/一个规范的自定义View/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View/">View</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/自定义View/">自定义View</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<i class="icon-book icon"></i>
-	<a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android开发艺术探索笔记/">Android开发艺术探索笔记</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/03/11/一个规范的自定义View/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-View的弹性滑动" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/11/View的弹性滑动/">View的弹性滑动</a>
-    </h1>
-  
-
-        <a href="/2016/03/11/View的弹性滑动/" class="archive-article-date">
-  	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>相信开发Android的人都会有这种体会：从网上下载的demo运行的好好的，但是只要出现了滑动冲突，Demo就无法正常工作了。但是不用担心，解决滑动冲突有固定的模式，常见的有内部拦截和外部拦截两种，只要按照这个模式来就可以顺利解决。<br>
-        
-          <a class="article-more-a" href="/2016/03/11/View的弹性滑动/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View/">View</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/弹性滑动/">弹性滑动</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<i class="icon-book icon"></i>
-	<a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android开发艺术探索笔记/">Android开发艺术探索笔记</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/03/11/View的弹性滑动/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-AIDL" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/11/AIDL/">AIDL</a>
-    </h1>
-  
-
-        <a href="/2016/03/11/AIDL/" class="archive-article-date">
-  	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Android Interface Definition Language (AIDL)， Android接口定义语言。系统中的进程之间不能共享内存，因此，需要提供一些机制在不同进程之间进行数据通信Interprocess communication (IPC)。AIDL就是解决这个问题的。<br>阅读本文需要了解Service的相关知识，关于Service的讲解请参考<a href="http://blog.csdn.net/l664675249/article/details/48899323">http://blog.csdn.net/l664675249/article/details/48899323</a><br>
-        
-          <a class="article-more-a" href="/2016/03/11/AIDL/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AIDL/">AIDL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IPC/">IPC</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<i class="icon-book icon"></i>
-	<a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android开发艺术探索笔记/">Android开发艺术探索笔记</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/03/11/AIDL/">展开全文 >></a>
         </p>
       
 
@@ -516,27 +389,27 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-View的工作原理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-一个规范的自定义View" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/11/View的工作原理/">ViewRoot、DecorView、MeasureSpec和View的工作原理</a>
+      <a class="article-title" href="/2016/03/11/一个规范的自定义View/">一个规范的自定义View</a>
     </h1>
   
 
-        <a href="/2016/03/11/View的工作原理/" class="archive-article-date">
+        <a href="/2016/03/11/一个规范的自定义View/" class="archive-article-date">
   	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
 </a>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>View的绘制流程是从ViewRoot的performTraversals方法开始的，它经过measure、layout和draw三个过程才能最终将一个View绘制出来，其中measure用来测量View的宽和高，layout用来确定View在父容器中的放置位置，而draw则负责将View绘制在屏幕上。<br>
+        <p>一个规范的自定义View<br>
         
-          <a class="article-more-a" href="/2016/03/11/View的工作原理/#more">more >></a>
+          <a class="article-more-a" href="/2016/03/11/一个规范的自定义View/#more">more >></a>
         
       
 
@@ -547,7 +420,7 @@ var _hmt = _hmt || [];
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View/">View</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View/">View</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/自定义View/">自定义View</a></li></ul>
 	</div>
 
       
@@ -559,7 +432,129 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2016/03/11/View的工作原理/">展开全文 >></a>
+          <a class="article-more-a" href="/2016/03/11/一个规范的自定义View/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
+    <article id="post-AIDL" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/11/AIDL/">AIDL</a>
+    </h1>
+  
+
+        <a href="/2016/03/11/AIDL/" class="archive-article-date">
+  	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Android Interface Definition Language (AIDL)， Android接口定义语言。系统中的进程之间不能共享内存，因此，需要提供一些机制在不同进程之间进行数据通信Interprocess communication (IPC)。AIDL就是解决这个问题的。<br>阅读本文需要了解Service的相关知识，关于Service的讲解请参考<a href="http://blog.csdn.net/l664675249/article/details/48899323">http://blog.csdn.net/l664675249/article/details/48899323</a><br>
+        
+          <a class="article-more-a" href="/2016/03/11/AIDL/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AIDL/">AIDL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IPC/">IPC</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<i class="icon-book icon"></i>
+	<a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android开发艺术探索笔记/">Android开发艺术探索笔记</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/03/11/AIDL/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
+    <article id="post-View的弹性滑动" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/11/View的弹性滑动/">View的弹性滑动</a>
+    </h1>
+  
+
+        <a href="/2016/03/11/View的弹性滑动/" class="archive-article-date">
+  	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>相信开发Android的人都会有这种体会：从网上下载的demo运行的好好的，但是只要出现了滑动冲突，Demo就无法正常工作了。但是不用担心，解决滑动冲突有固定的模式，常见的有内部拦截和外部拦截两种，只要按照这个模式来就可以顺利解决。<br>
+        
+          <a class="article-more-a" href="/2016/03/11/View的弹性滑动/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View/">View</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/弹性滑动/">弹性滑动</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<i class="icon-book icon"></i>
+	<a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android开发艺术探索笔记/">Android开发艺术探索笔记</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/03/11/View的弹性滑动/">展开全文 >></a>
         </p>
       
 
@@ -845,6 +840,10 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)">深入理解JVM虚拟机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">Android</a>
               </li>
              
@@ -869,7 +868,7 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">深入理解JVM虚拟机</a>
+                <a href="javascript:void(0)">弹性滑动</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -881,15 +880,11 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">自定义View</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">弹性滑动</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">apk</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">自定义View</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -960,23 +955,11 @@ var _hmt = _hmt || [];
     
 
     
-    	<section class="tools-section tools-section-friends" q-show="friends">
-  		
-        <ul class="search-ul">
-          
-            <li class="search-li">
-              <a href="http://blog.csdn.net/l664675249" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>CSDN Blog</a>
-            </li>
-          
-        </ul>
-  		
-    	</section>
-    
 
     
     	<section class="tools-section tools-section-me" q-show="aboutme">
   	  	
-  	  		<div class="aboutme-wrap" id="js-aboutme">Spark，&lt;br&gt;同济小硕&lt;br&gt;&lt;br&gt;视觉动物&lt;br&gt;喜欢摄影、设计、交互等一切与视觉有关的东西&lt;br/&gt;&lt;br/&gt;好奇至死&lt;br&gt;如果哪天突然死了&lt;br&gt;一定是因为好奇心太重自己作死的&lt;br/&gt;&lt;br/&gt;做个“大前端”</div>
+  	  		<div class="aboutme-wrap" id="js-aboutme">Spark&lt;br&gt;同济小硕&lt;br&gt;&lt;br&gt;视觉动物&lt;br&gt;喜欢摄影、设计、交互等一切与视觉有关的东西&lt;br/&gt;&lt;br/&gt;好奇至死&lt;br&gt;如果哪天突然死了&lt;br&gt;一定是因为好奇心太重自己作死的&lt;br/&gt;&lt;br/&gt;做个“大前端”</div>
   	  	
     	</section>
     
