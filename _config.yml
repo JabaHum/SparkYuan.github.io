@@ -4,8 +4,8 @@
 
 # Site
 title: Spark Yuan
-subtitle:
-description:
+subtitle: 视觉动物，好奇至死
+description: 如果哪天突然死了，一定是因为好奇心太重自己作死的
 author: Spark Yuan
 language:
 timezone:
@@ -63,7 +63,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: yelee
+theme: yilia
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -71,3 +71,24 @@ deploy:
   type: git
   repo: git@github.com:SparkYuan/SparkYuan.github.io.git
   branch: master
+
+#Content
+jsonContent:
+    meta: false
+    pages: false
+    posts:
+      title: true
+      date: true
+      path: true
+      text: true
+      raw: false
+      content: false
+      slug: false
+      updated: false
+      comments: false
+      link: false
+      permalink: false
+      excerpt: false
+      categories: false
+      tags: true
+

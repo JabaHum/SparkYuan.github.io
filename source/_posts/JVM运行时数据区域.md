@@ -1,4 +1,4 @@
-title: JVM运行时数据区域
+title: JVM内存区域分析
 date: 2016/4/22 15:38:51
 categories:
 - JVM
