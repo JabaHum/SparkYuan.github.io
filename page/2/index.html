@@ -146,6 +146,81 @@ var _hmt = _hmt || [];
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-View事件分发机制" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/11/View事件分发机制/">View事件分发机制</a>
+    </h1>
+  
+
+        <a href="/2016/03/11/View事件分发机制/" class="archive-article-date">
+  	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>点击事件的事件分发就是对MotionEvent事件的分发过程，当一个MotionEvent产生了以后，系统需要把这个事件传递给一个具体的View，而这个传递的过程就是分发的过程。<br>
+        
+          <a class="article-more-a" href="/2016/03/11/View事件分发机制/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list">
+			 
+        <li class="article-tag-list-item">
+        	<a href="javascript:void(0)" class="article-tag-list-link color3">Android</a>
+        </li>
+       
+        <li class="article-tag-list-item">
+        	<a href="javascript:void(0)" class="article-tag-list-link color5">View</a>
+        </li>
+       
+        <li class="article-tag-list-item">
+        	<a href="javascript:void(0)" class="article-tag-list-link color2">事件分发机制</a>
+        </li>
+      
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<i class="icon-book icon"></i>
+	<a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android开发艺术探索笔记/">Android开发艺术探索笔记</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/03/11/View事件分发机制/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-AIDL" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -217,27 +292,27 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-一个规范的自定义View" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-View的工作原理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/11/一个规范的自定义View/">一个规范的自定义View</a>
+      <a class="article-title" href="/2016/03/11/View的工作原理/">ViewRoot、DecorView、MeasureSpec和View的工作原理</a>
     </h1>
   
 
-        <a href="/2016/03/11/一个规范的自定义View/" class="archive-article-date">
+        <a href="/2016/03/11/View的工作原理/" class="archive-article-date">
   	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
 </a>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>一个规范的自定义View<br>
+        <p>View的绘制流程是从ViewRoot的performTraversals方法开始的，它经过measure、layout和draw三个过程才能最终将一个View绘制出来，其中measure用来测量View的宽和高，layout用来确定View在父容器中的放置位置，而draw则负责将View绘制在屏幕上。<br>
         
-          <a class="article-more-a" href="/2016/03/11/一个规范的自定义View/#more">more >></a>
+          <a class="article-more-a" href="/2016/03/11/View的工作原理/#more">more >></a>
         
       
 
@@ -257,10 +332,6 @@ var _hmt = _hmt || [];
         <li class="article-tag-list-item">
         	<a href="javascript:void(0)" class="article-tag-list-link color5">View</a>
         </li>
-       
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color3">自定义View</a>
-        </li>
       
 		</ul>
 	</div>
@@ -274,82 +345,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2016/03/11/一个规范的自定义View/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-View的弹性滑动" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/11/View的弹性滑动/">View的弹性滑动</a>
-    </h1>
-  
-
-        <a href="/2016/03/11/View的弹性滑动/" class="archive-article-date">
-  	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>相信开发Android的人都会有这种体会：从网上下载的demo运行的好好的，但是只要出现了滑动冲突，Demo就无法正常工作了。但是不用担心，解决滑动冲突有固定的模式，常见的有内部拦截和外部拦截两种，只要按照这个模式来就可以顺利解决。<br>
-        
-          <a class="article-more-a" href="/2016/03/11/View的弹性滑动/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color3">Android</a>
-        </li>
-       
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color5">View</a>
-        </li>
-       
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color5">弹性滑动</a>
-        </li>
-      
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<i class="icon-book icon"></i>
-	<a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android开发艺术探索笔记/">Android开发艺术探索笔记</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/03/11/View的弹性滑动/">展开全文 >></a>
+          <a class="article-more-a" href="/2016/03/11/View的工作原理/">展开全文 >></a>
         </p>
       
 
@@ -442,98 +438,27 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-View的工作原理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-View的弹性滑动" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/11/View的工作原理/">ViewRoot、DecorView、MeasureSpec和View的工作原理</a>
+      <a class="article-title" href="/2016/03/11/View的弹性滑动/">View的弹性滑动</a>
     </h1>
   
 
-        <a href="/2016/03/11/View的工作原理/" class="archive-article-date">
+        <a href="/2016/03/11/View的弹性滑动/" class="archive-article-date">
   	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
 </a>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>View的绘制流程是从ViewRoot的performTraversals方法开始的，它经过measure、layout和draw三个过程才能最终将一个View绘制出来，其中measure用来测量View的宽和高，layout用来确定View在父容器中的放置位置，而draw则负责将View绘制在屏幕上。<br>
+        <p>相信开发Android的人都会有这种体会：从网上下载的demo运行的好好的，但是只要出现了滑动冲突，Demo就无法正常工作了。但是不用担心，解决滑动冲突有固定的模式，常见的有内部拦截和外部拦截两种，只要按照这个模式来就可以顺利解决。<br>
         
-          <a class="article-more-a" href="/2016/03/11/View的工作原理/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list">
-			 
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color3">Android</a>
-        </li>
-       
-        <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color5">View</a>
-        </li>
-      
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<i class="icon-book icon"></i>
-	<a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android开发艺术探索笔记/">Android开发艺术探索笔记</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/03/11/View的工作原理/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-View事件分发机制" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/11/View事件分发机制/">View事件分发机制</a>
-    </h1>
-  
-
-        <a href="/2016/03/11/View事件分发机制/" class="archive-article-date">
-  	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
-</a>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>点击事件的事件分发就是对MotionEvent事件的分发过程，当一个MotionEvent产生了以后，系统需要把这个事件传递给一个具体的View，而这个传递的过程就是分发的过程。<br>
-        
-          <a class="article-more-a" href="/2016/03/11/View事件分发机制/#more">more >></a>
+          <a class="article-more-a" href="/2016/03/11/View的弹性滑动/#more">more >></a>
         
       
 
@@ -555,7 +480,7 @@ var _hmt = _hmt || [];
         </li>
        
         <li class="article-tag-list-item">
-        	<a href="javascript:void(0)" class="article-tag-list-link color2">事件分发机制</a>
+        	<a href="javascript:void(0)" class="article-tag-list-link color5">弹性滑动</a>
         </li>
       
 		</ul>
@@ -570,7 +495,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2016/03/11/View事件分发机制/">展开全文 >></a>
+          <a class="article-more-a" href="/2016/03/11/View的弹性滑动/">展开全文 >></a>
         </p>
       
 
@@ -646,6 +571,81 @@ var _hmt = _hmt || [];
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2016/03/11/属性动画/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
+    <article id="post-一个规范的自定义View" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/11/一个规范的自定义View/">一个规范的自定义View</a>
+    </h1>
+  
+
+        <a href="/2016/03/11/一个规范的自定义View/" class="archive-article-date">
+  	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
+</a>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一个规范的自定义View<br>
+        
+          <a class="article-more-a" href="/2016/03/11/一个规范的自定义View/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list">
+			 
+        <li class="article-tag-list-item">
+        	<a href="javascript:void(0)" class="article-tag-list-link color3">Android</a>
+        </li>
+       
+        <li class="article-tag-list-item">
+        	<a href="javascript:void(0)" class="article-tag-list-link color5">View</a>
+        </li>
+       
+        <li class="article-tag-list-item">
+        	<a href="javascript:void(0)" class="article-tag-list-link color3">自定义View</a>
+        </li>
+      
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<i class="icon-book icon"></i>
+	<a class="article-category-link" href="/categories/Android/">Android</a><a class="article-category-link" href="/categories/Android/Android开发艺术探索笔记/">Android开发艺术探索笔记</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/03/11/一个规范的自定义View/">展开全文 >></a>
         </p>
       
 
@@ -996,10 +996,6 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color4">Activity</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="color5">AIDL</a>
               </li>
              
@@ -1008,11 +1004,35 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color4">Activity</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="color5">安全机制</a>
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="color5">AsyncTask</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color5">源码剖析</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color3">IntentFilter</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color5">匹配规则</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color1">深入理解JVM虚拟机</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1028,27 +1048,11 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color3">IntentFilter</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color5">匹配规则</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color5">源码剖析</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color1">深入理解JVM虚拟机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="color5">View</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color5">弹性滑动</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1056,11 +1060,7 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color3">自定义View</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color5">弹性滑动</a>
+                <a href="javascript:void(0)" class="color4">apk</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1069,18 +1069,6 @@ var _hmt = _hmt || [];
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="color4">WindowManager</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color4">apk</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color1">crash</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="color5">属性动画</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1093,6 +1081,18 @@ var _hmt = _hmt || [];
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="color1">ContentProvider</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color1">crash</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color3">自定义View</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="color5">属性动画</a>
               </li>
              
               <li class="article-tag-list-item">
