@@ -8,15 +8,12 @@
   <link rel="dns-prefetch" href="http://sparkyuan.github.io">
   <title>Spark Yuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="如果哪天突然死了，一定是因为好奇心太重自己作死的">
-<meta property="og:type" content="website">
+  <meta property="og:type" content="website">
 <meta property="og:title" content="Spark Yuan">
 <meta property="og:url" content="http://sparkyuan.github.io/page/2/index.html">
 <meta property="og:site_name" content="Spark Yuan">
-<meta property="og:description" content="如果哪天突然死了，一定是因为好奇心太重自己作死的">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spark Yuan">
-<meta name="twitter:description" content="如果哪天突然死了，一定是因为好奇心太重自己作死的">
   
     <link rel="alternative" href="/atom.xml" title="Spark Yuan" type="application/atom+xml">
   
@@ -145,27 +142,27 @@ var _hmt = _hmt || [];
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-属性动画" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-一个规范的自定义View" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/11/属性动画/">属性动画</a>
+      <a class="article-title" href="/2016/03/11/一个规范的自定义View/">一个规范的自定义View</a>
     </h1>
   
 
-        <a href="/2016/03/11/属性动画/" class="archive-article-date">
+        <a href="/2016/03/11/一个规范的自定义View/" class="archive-article-date">
   	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
 </a>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Animator最早出现在Android 3.0 中，和之前的Animation框架相比，Animator更加的灵活并且具有更多的功能，官方推荐使用Animator代替Animation。在3.0之前可以使用<a href="http://nineoldandroids.com/">nineoldandroids</a>来实现相同的效果。<br>
+        <p>一个规范的自定义View<br>
         
-          <a class="article-more-a" href="/2016/03/11/属性动画/#more">more >></a>
+          <a class="article-more-a" href="/2016/03/11/一个规范的自定义View/#more">more >></a>
         
       
 
@@ -176,7 +173,7 @@ var _hmt = _hmt || [];
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View/">View</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/属性动画/">属性动画</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View/">View</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/自定义View/">自定义View</a></li></ul>
 	</div>
 
       
@@ -188,7 +185,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2016/03/11/属性动画/">展开全文 >></a>
+          <a class="article-more-a" href="/2016/03/11/一个规范的自定义View/">展开全文 >></a>
         </p>
       
 
@@ -206,27 +203,27 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-View的工作原理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-View的弹性滑动" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/11/View的工作原理/">ViewRoot、DecorView、MeasureSpec和View的工作原理</a>
+      <a class="article-title" href="/2016/03/11/View的弹性滑动/">View的弹性滑动</a>
     </h1>
   
 
-        <a href="/2016/03/11/View的工作原理/" class="archive-article-date">
+        <a href="/2016/03/11/View的弹性滑动/" class="archive-article-date">
   	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
 </a>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>View的绘制流程是从ViewRoot的performTraversals方法开始的，它经过measure、layout和draw三个过程才能最终将一个View绘制出来，其中measure用来测量View的宽和高，layout用来确定View在父容器中的放置位置，而draw则负责将View绘制在屏幕上。<br>
+        <p>相信开发Android的人都会有这种体会：从网上下载的demo运行的好好的，但是只要出现了滑动冲突，Demo就无法正常工作了。但是不用担心，解决滑动冲突有固定的模式，常见的有内部拦截和外部拦截两种，只要按照这个模式来就可以顺利解决。<br>
         
-          <a class="article-more-a" href="/2016/03/11/View的工作原理/#more">more >></a>
+          <a class="article-more-a" href="/2016/03/11/View的弹性滑动/#more">more >></a>
         
       
 
@@ -237,7 +234,7 @@ var _hmt = _hmt || [];
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View/">View</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View/">View</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/弹性滑动/">弹性滑动</a></li></ul>
 	</div>
 
       
@@ -249,7 +246,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2016/03/11/View的工作原理/">展开全文 >></a>
+          <a class="article-more-a" href="/2016/03/11/View的弹性滑动/">展开全文 >></a>
         </p>
       
 
@@ -389,27 +386,27 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-一个规范的自定义View" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-View的工作原理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/11/一个规范的自定义View/">一个规范的自定义View</a>
+      <a class="article-title" href="/2016/03/11/View的工作原理/">ViewRoot、DecorView、MeasureSpec和View的工作原理</a>
     </h1>
   
 
-        <a href="/2016/03/11/一个规范的自定义View/" class="archive-article-date">
+        <a href="/2016/03/11/View的工作原理/" class="archive-article-date">
   	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
 </a>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>一个规范的自定义View<br>
+        <p>View的绘制流程是从ViewRoot的performTraversals方法开始的，它经过measure、layout和draw三个过程才能最终将一个View绘制出来，其中measure用来测量View的宽和高，layout用来确定View在父容器中的放置位置，而draw则负责将View绘制在屏幕上。<br>
         
-          <a class="article-more-a" href="/2016/03/11/一个规范的自定义View/#more">more >></a>
+          <a class="article-more-a" href="/2016/03/11/View的工作原理/#more">more >></a>
         
       
 
@@ -420,7 +417,7 @@ var _hmt = _hmt || [];
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View/">View</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/自定义View/">自定义View</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View/">View</a></li></ul>
 	</div>
 
       
@@ -432,7 +429,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2016/03/11/一个规范的自定义View/">展开全文 >></a>
+          <a class="article-more-a" href="/2016/03/11/View的工作原理/">展开全文 >></a>
         </p>
       
 
@@ -511,27 +508,27 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-View的弹性滑动" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-属性动画" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/11/View的弹性滑动/">View的弹性滑动</a>
+      <a class="article-title" href="/2016/03/11/属性动画/">属性动画</a>
     </h1>
   
 
-        <a href="/2016/03/11/View的弹性滑动/" class="archive-article-date">
+        <a href="/2016/03/11/属性动画/" class="archive-article-date">
   	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
 </a>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>相信开发Android的人都会有这种体会：从网上下载的demo运行的好好的，但是只要出现了滑动冲突，Demo就无法正常工作了。但是不用担心，解决滑动冲突有固定的模式，常见的有内部拦截和外部拦截两种，只要按照这个模式来就可以顺利解决。<br>
+        <p>Animator最早出现在Android 3.0 中，和之前的Animation框架相比，Animator更加的灵活并且具有更多的功能，官方推荐使用Animator代替Animation。在3.0之前可以使用<a href="http://nineoldandroids.com/">nineoldandroids</a>来实现相同的效果。<br>
         
-          <a class="article-more-a" href="/2016/03/11/View的弹性滑动/#more">more >></a>
+          <a class="article-more-a" href="/2016/03/11/属性动画/#more">more >></a>
         
       
 
@@ -542,7 +539,7 @@ var _hmt = _hmt || [];
       
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags"></i>
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View/">View</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/弹性滑动/">弹性滑动</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View/">View</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/属性动画/">属性动画</a></li></ul>
 	</div>
 
       
@@ -554,7 +551,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2016/03/11/View的弹性滑动/">展开全文 >></a>
+          <a class="article-more-a" href="/2016/03/11/属性动画/">展开全文 >></a>
         </p>
       
 
@@ -808,19 +805,19 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">AIDL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">IPC</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">Activity</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)">安全机制</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">AIDL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">IPC</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -852,6 +849,14 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)">View</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)">事件分发机制</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">IntentFilter</a>
               </li>
              
@@ -860,11 +865,7 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">View</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)">事件分发机制</a>
+                <a href="javascript:void(0)">自定义View</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -884,10 +885,6 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">自定义View</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)">crash</a>
               </li>
              
@@ -904,11 +901,11 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">属性动画</a>
+                <a href="javascript:void(0)">Annotation</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)">Annotation</a>
+                <a href="javascript:void(0)">属性动画</a>
               </li>
             
             <div class="clearfix"></div>
@@ -959,7 +956,7 @@ var _hmt = _hmt || [];
     
     	<section class="tools-section tools-section-me" q-show="aboutme">
   	  	
-  	  		<div class="aboutme-wrap" id="js-aboutme">Spark&lt;br&gt;同济小硕&lt;br&gt;&lt;br&gt;视觉动物&lt;br&gt;喜欢摄影、设计、交互等一切与视觉有关的东西&lt;br/&gt;&lt;br/&gt;好奇至死&lt;br&gt;如果哪天突然死了&lt;br&gt;一定是因为好奇心太重自己作死的&lt;br/&gt;&lt;br/&gt;做个“大前端”</div>
+  	  		<div class="aboutme-wrap" id="js-aboutme">还没想好，想好再写</div>
   	  	
     	</section>
     
