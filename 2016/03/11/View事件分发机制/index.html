@@ -14,7 +14,7 @@
 <meta property="og:url" content="http://sparkyuan.github.io/2016/03/11/View事件分发机制/index.html">
 <meta property="og:site_name" content="Spark Yuan">
 <meta property="og:description" content="介绍点击事件的事件分发就是对MotionEvent事件的分发过程，当一个MotionEvent产生了以后，系统需要把这个事件传递给一个具体的View，而这个传递的过程就是分发的过程。">
-<meta property="og:updated_time" content="2016-12-28T12:14:26.000Z">
+<meta property="og:updated_time" content="2017-01-05T14:02:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="View事件分发机制">
 <meta name="twitter:description" content="介绍点击事件的事件分发就是对MotionEvent事件的分发过程，当一个MotionEvent产生了以后，系统需要把这个事件传递给一个具体的View，而这个传递的过程就是分发的过程。">
@@ -180,13 +180,17 @@ var _hmt = _hmt || [];
 <li>onTouchEvent：在dispatchTouchEvent方法中调用，用来处理点击事件，返回结果表示是否消耗当前事件，如果不消耗，则在同一个事件序列中，当前View无法再次接收到事件。</li>
 </ul>
 <h2 id="三个方法之间的关系"><a href="#三个方法之间的关系" class="headerlink" title="三个方法之间的关系"></a>三个方法之间的关系</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123; </div><div class="line">    <span class="keyword">boolean</span> consume = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">if</span>(onInterceptTouchEvent(ev)) &#123; </div><div class="line">        consume = onTouchEvent(ev);</div><div class="line">    &#125; <span class="keyword">else</span> &#123; </div><div class="line">        consume = child.dispatchTouchEvent(ev); </div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> consume; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上面的伪代码很好的描述了三者之间的关系。如果当前View拦截事件，就交给自己的onTouchEvent去处理，否则就传给子View，直到事件被最终处理。</p>
-<h1 id="事件分发顺序"><a href="#事件分发顺序" class="headerlink" title="事件分发顺序"></a>事件分发顺序</h1><p>当一个点击事件产生后，它的传递过程如下：Activity -&gt; Window -&gt; View。如果View的onTouchEvent返回false，那么它的父容器onTouchEvent将会被调用，以此类推，最终将由Activity的onTouchEvent处理。</p>
-<h2 id="Activity对事件的分发过程"><a href="#Activity对事件的分发过程" class="headerlink" title="Activity对事件的分发过程"></a>Activity对事件的分发过程</h2><p><strong>Activity -&gt; Window -&gt; DecorView。</strong></p>
-<p>Windows是一个抽象类，可以控制<strong>顶级View</strong>的外观和行为策略，PhoneWindow是这个类的唯一个实现。<br>DecorView就是当前界面的底层容器，即setContentView所设置的View是它的一个子View。</p>
+<h1 id="事件分发顺序"><a href="#事件分发顺序" class="headerlink" title="事件分发顺序"></a>事件分发顺序</h1><p>当一个点击事件产生后，它的传递过程如下：Activity -&gt; Window -&gt; View。</p>
+<ol>
+<li>对于一个ViewGroup来说，当点击事件产生时，View的dispatchTouchEvent会被调用。如果当前View拦截事件，onInterceptTouchEvent返回<strong>true</strong>，就交给自己的onTouchEvent去处理，返回<strong>false</strong>就传给子View，子View的dispatchTouchEvent会被调用，如此反复直到事件被最终处理。</li>
+<li>当一个View拦截事件之后，如果它设置了OnTouchListener，那么OnTouchListener中的onTouch方法会被回调。如果onTouch返回值为false，当前View的onTouchEvent方法会被调用。<strong>在onTouchEvent中，</strong>如果设置了OnClickListener，onClick方法会被调用。我们平时使用的OnClickListener优先级最低，在事件处理的最低端<strong>View的OnTouchListener的优先级比onTouchEvent要高。</strong></li>
+<li>如果View的onTouchEvent返回<strong>false</strong>，那么它的父容器onTouchEvent将会被调用，以此类推，如果所有的View都不处理这个事件，最终将由Activity的onTouchEvent处理。</li>
+</ol>
+<h2 id="Activity对事件的分发过程"><a href="#Activity对事件的分发过程" class="headerlink" title="Activity对事件的分发过程"></a>Activity对事件的分发过程</h2><p><strong>Activity -&gt; Window -&gt; DecorView</strong></p>
+<p>Windows是一个抽象类，可以控制顶级View的外观和行为策略，PhoneWindow是这个类的唯一个实现。<br>DecorView就是当前界面的底层容器，即setContentView所设置的View是它的一个子View。</p>
 <h2 id="顶级View对点击事件的分发过程"><a href="#顶级View对点击事件的分发过程" class="headerlink" title="顶级View对点击事件的分发过程"></a>顶级View对点击事件的分发过程</h2><p><strong>ViewGroup -&gt; dispatchTouchEvent -&gt; onInterceptTouchEvent -&gt; onTouch or onTouchEvent</strong></p>
 <p>顶级View一般都是一个ViewGroup。拦截事件之后，如果ViewGroup设置了mOnTouchListener，则Listener里的onTouch方法会屏蔽掉onTouchEvent。如果onTouchEvent设置了mOnClickListener，则Listener里的onClick会被调用。如果ViewGroup没有拦截则传给子View直到整个事件分发完成。</p>
-<p>##View对点击事件的处理过程<br>如果View设置了mOnTouchListener，则Listener里的onTouch方法会屏蔽掉onTouchEvent。如果onTouchEvent设置了mOnClickListener，则Listener里的onClick会被调用。<br>View没有onInterceptTouchEvent方法，一旦有点击事件传递给他，他就会处理。</p>
+<h2 id="View对点击事件的处理过程"><a href="#View对点击事件的处理过程" class="headerlink" title="View对点击事件的处理过程"></a>View对点击事件的处理过程</h2><p>如果View设置了OnTouchListener，则Listener里的onTouch方法会屏蔽掉onTouchEvent。如果onTouchEvent设置了OnClickListener，则Listener里的onClick会被调用。<br>View没有onInterceptTouchEvent方法，一旦有点击事件传递给他，他就会处理。</p>
 <p>注：上面只是描述了事件分发过程的原理，关于源码的分析请参考书本的相应章节。</p>
 <p>欢迎转载，转载请注明出处<a href="http://sparkyuan.github.io/">http://sparkyuan.github.io/</a></p>
 
@@ -295,18 +299,18 @@ var _hmt = _hmt || [];
   
 <nav id="article-nav">
   
-    <a href="/2016/03/14/四大组件的工作过程/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2016/03/11/AIDL/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          从源码的角度理解四大组件的工作过程
+          AIDL
         
       </div>
     </a>
   
   
-    <a href="/2016/03/11/属性动画/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">属性动画</div>
+    <a href="/2016/03/11/一个规范的自定义View/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">一个规范的自定义View</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -435,6 +439,10 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Activity</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">AIDL</a>
               </li>
              
@@ -443,7 +451,19 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Activity</a>
+                <a href="javascript:void(0)" class="js-tag color5">AsyncTask</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">HandlerThread</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">IntentService</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Thread</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -452,10 +472,6 @@ var _hmt = _hmt || [];
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">AsyncTask</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -475,15 +491,11 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">HandlerThread</a>
+                <a href="javascript:void(0)" class="js-tag color2">Window</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">IntentService</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Thread</a>
+                <a href="javascript:void(0)" class="js-tag color4">WindowManager</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -491,11 +503,15 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">弹性滑动</a>
+                <a href="javascript:void(0)" class="js-tag color2">事件分发机制</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">事件分发机制</a>
+                <a href="javascript:void(0)" class="js-tag color3">自定义View</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">弹性滑动</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -503,11 +519,7 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Window</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">WindowManager</a>
+                <a href="javascript:void(0)" class="js-tag color1">crash</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -520,14 +532,6 @@ var _hmt = _hmt || [];
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">ContentProvider</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">crash</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">自定义View</a>
               </li>
              
               <li class="article-tag-list-item">
