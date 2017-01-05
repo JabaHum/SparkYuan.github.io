@@ -33,15 +33,18 @@ public boolean dispatchTouchEvent(MotionEvent ev) {
 }
 ```
 
-上面的伪代码很好的描述了三者之间的关系。如果当前View拦截事件，就交给自己的onTouchEvent去处理，否则就传给子View，直到事件被最终处理。
-
 # 事件分发顺序
-当一个点击事件产生后，它的传递过程如下：Activity -> Window -> View。如果View的onTouchEvent返回false，那么它的父容器onTouchEvent将会被调用，以此类推，最终将由Activity的onTouchEvent处理。
+当一个点击事件产生后，它的传递过程如下：Activity -> Window -> View。
+
+1. 对于一个ViewGroup来说，当点击事件产生时，View的dispatchTouchEvent会被调用。如果当前View拦截事件，onInterceptTouchEvent返回**true**，就交给自己的onTouchEvent去处理，返回**false**就传给子View，子View的dispatchTouchEvent会被调用，如此反复直到事件被最终处理。
+2. 当一个View拦截事件之后，如果它设置了OnTouchListener，那么OnTouchListener中的onTouch方法会被回调。如果onTouch返回值为false，当前View的onTouchEvent方法会被调用。**在onTouchEvent中，**如果设置了OnClickListener，onClick方法会被调用。我们平时使用的OnClickListener优先级最低，在事件处理的最低端**View的OnTouchListener的优先级比onTouchEvent要高。**
+3. 如果View的onTouchEvent返回**false**，那么它的父容器onTouchEvent将会被调用，以此类推，如果所有的View都不处理这个事件，最终将由Activity的onTouchEvent处理。
+
 
 ## Activity对事件的分发过程
-**Activity -> Window -> DecorView。**
+**Activity -> Window -> DecorView**
 
-Windows是一个抽象类，可以控制**顶级View**的外观和行为策略，PhoneWindow是这个类的唯一个实现。
+Windows是一个抽象类，可以控制顶级View的外观和行为策略，PhoneWindow是这个类的唯一个实现。
 DecorView就是当前界面的底层容器，即setContentView所设置的View是它的一个子View。
 
 ## 顶级View对点击事件的分发过程
@@ -50,8 +53,8 @@ DecorView就是当前界面的底层容器，即setContentView所设置的View�
 
 顶级View一般都是一个ViewGroup。拦截事件之后，如果ViewGroup设置了mOnTouchListener，则Listener里的onTouch方法会屏蔽掉onTouchEvent。如果onTouchEvent设置了mOnClickListener，则Listener里的onClick会被调用。如果ViewGroup没有拦截则传给子View直到整个事件分发完成。
 
-##View对点击事件的处理过程
-如果View设置了mOnTouchListener，则Listener里的onTouch方法会屏蔽掉onTouchEvent。如果onTouchEvent设置了mOnClickListener，则Listener里的onClick会被调用。
+## View对点击事件的处理过程
+如果View设置了OnTouchListener，则Listener里的onTouch方法会屏蔽掉onTouchEvent。如果onTouchEvent设置了OnClickListener，则Listener里的onClick会被调用。
 View没有onInterceptTouchEvent方法，一旦有点击事件传递给他，他就会处理。
 
 注：上面只是描述了事件分发过程的原理，关于源码的分析请参考书本的相应章节。
