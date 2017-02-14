@@ -29,7 +29,7 @@ tags:
 这是Java本身就支持的类，自定义化程度高，但是所有的功能都需要自己维护。
 
 ## AsyncTask
-AsyncTask常用于可以在几秒钟完成的后台任务，关于AsyncTask的讲解可以看这一篇文章[http://sparkyuan.me/2016/03/23/AsyncTask源码剖析(API 23)/ ](http://sparkyuan.me/2016/03/23/AsyncTask%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90(API%2023)/)/)
+AsyncTask常用于可以在几秒钟完成的后台任务，关于AsyncTask的讲解可以看这一篇文章[http://sparkyuan.me/2016/03/23/AsyncTask%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90(API%2023) ](http://sparkyuan.me/2016/03/23/AsyncTask源码剖析(API 23) )
 讲解了AsyncTask的基本用法和源码分析。
 
 ## HandlerThread
@@ -74,6 +74,8 @@ public class LocalIntentService extends IntentService {
         startService(service);
         
 ```
+
+三个后台任务是顺序执行的。 第一个任务执行需要sleep(3000)，这时后面的2个任务已经被加入到队列中。
 
 # Android中的线程池
 ## 使用线程池的优点

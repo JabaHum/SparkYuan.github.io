@@ -8,15 +8,12 @@
   <link rel="dns-prefetch" href="http://sparkyuan.github.io">
   <title>Spark Yuan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="如果哪天突然死了，一定是因为好奇心太重自己作死的">
-<meta property="og:type" content="website">
+  <meta property="og:type" content="website">
 <meta property="og:title" content="Spark Yuan">
 <meta property="og:url" content="http://sparkyuan.github.io/page/2/index.html">
 <meta property="og:site_name" content="Spark Yuan">
-<meta property="og:description" content="如果哪天突然死了，一定是因为好奇心太重自己作死的">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spark Yuan">
-<meta name="twitter:description" content="如果哪天突然死了，一定是因为好奇心太重自己作死的">
   
     <link rel="alternative" href="/atom.xml" title="Spark Yuan" type="application/atom+xml">
   
@@ -61,7 +58,7 @@ var _hmt = _hmt || [];
 		  <h1 class="header-author"><a href="/">Spark Yuan</a></h1>
 		</hgroup>
 		
-		<p class="header-subtitle">视觉动物，好奇至死</p>
+		<p class="header-subtitle">咦~ 那是什么，能吃吗？</p>
 		
 
 		<nav class="header-menu">
@@ -113,7 +110,7 @@ var _hmt = _hmt || [];
 			  <h1 class="header-author js-header-author">Spark Yuan</h1>
 			</hgroup>
 			
-			<p class="header-subtitle"><i class="icon icon-quo-left"></i>视觉动物，好奇至死<i class="icon icon-quo-right"></i></p>
+			<p class="header-subtitle"><i class="icon icon-quo-left"></i>咦~ 那是什么，能吃吗？<i class="icon icon-quo-right"></i></p>
 			
 			
 			
@@ -154,29 +151,35 @@ var _hmt = _hmt || [];
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-AIDL" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-四大组件的工作过程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/11/AIDL/">AIDL</a>
+      <a class="article-title" href="/2016/03/14/四大组件的工作过程/">从源码的角度理解四大组件的工作过程</a>
     </h1>
   
 
         
-        <a href="/2016/03/11/AIDL/" class="archive-article-date">
-  	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
+        <a href="/2016/03/14/四大组件的工作过程/" class="archive-article-date">
+  	<time datetime="2016-03-14T14:35:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-14</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Android Interface Definition Language (AIDL)， Android接口定义语言。系统中的进程之间不能共享内存，因此，需要提供一些机制在不同进程之间进行数据通信Interprocess communication (IPC)。AIDL就是解决这个问题的。<br>阅读本文需要了解Service的相关知识，关于Service的讲解请参考<a href="http://blog.csdn.net/l664675249/article/details/48899323">http://blog.csdn.net/l664675249/article/details/48899323</a><br>
+        <p>系统对四大组件的过程进行了很大程度的封装，日常开发中并不需要了解底层的工作原理，那么研究这些原理的意义在哪里呢？</p>
+<ul>
+<li>如果你想在技术上更进一步，那么了解一些系统的工作原理是十分必要的，也是开发人员日后成长为高级工程师所必备的技术能力。</li>
+<li>Android作为一个优秀的基于Linux操作系统，其内部一定有很多值得我们学习的地方，通过对Android操作系统的学习对提高开发人员的内功有很大的好处。</li>
+<li>如果你从事Android Rom开发，那就没什么好说的了，看源码吧。</li>
+</ul>
+<p>本文侧重于对四大组件工作过程的分析，通过分析他们的工作过程理解系统内部运行机制，加深我们对Android整体系统结构的认识。<br>
         
-          <a class="article-more-a" href="/2016/03/11/AIDL/#more">more >></a>
+          <a class="article-more-a" href="/2016/03/14/四大组件的工作过程/#more">more >></a>
         
       
 
@@ -190,11 +193,19 @@ var _hmt = _hmt || [];
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">AIDL</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Activity</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">IPC</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Service</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">BroadcastReceiver</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">ContentProvider</a>
         		</li>
       		
 		</ul>
@@ -219,94 +230,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2016/03/11/AIDL/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
-    <article id="post-View事件分发机制" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/11/View事件分发机制/">View事件分发机制</a>
-    </h1>
-  
-
-        
-        <a href="/2016/03/11/View事件分发机制/" class="archive-article-date">
-  	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>点击事件的事件分发就是对MotionEvent事件的分发过程，当一个MotionEvent产生了以后，系统需要把这个事件传递给一个具体的View，而这个传递的过程就是分发的过程。<br>
-        
-          <a class="article-more-a" href="/2016/03/11/View事件分发机制/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">View</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">事件分发机制</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android开发艺术探索笔记/" class="article-tag-list-link color1">Android开发艺术探索笔记</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2016/03/11/View事件分发机制/">展开全文 >></a>
+          <a class="article-more-a" href="/2016/03/14/四大组件的工作过程/">展开全文 >></a>
         </p>
       
 
@@ -498,19 +422,19 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-属性动画" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-Windows和WindowManager" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/11/属性动画/">属性动画</a>
+      <a class="article-title" href="/2016/03/11/Windows和WindowManager/">Windows和WindowManager</a>
     </h1>
   
 
         
-        <a href="/2016/03/11/属性动画/" class="archive-article-date">
+        <a href="/2016/03/11/Windows和WindowManager/" class="archive-article-date">
   	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
 </a>
         
@@ -518,9 +442,9 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Animator最早出现在Android 3.0 中，和之前的Animation框架相比，Animator更加的灵活并且具有更多的功能，官方推荐使用Animator代替Animation。在3.0之前可以使用<a href="http://nineoldandroids.com/">nineoldandroids</a>来实现相同的效果。<br>
+        <p>Window表示一个窗口的概念，在某些特殊的时候，比如你需要在桌面或者锁屏上显示一些类似悬浮窗的东西时候就需要用到Window。Window是一个抽象类，Window的实现类是PhoneWindow。Window的具体实现位于WindowManagerService中，WindowManager和WindowManagerService的交互是一个IPC过程。Android中所有的视图都是通过Window来呈现的，不管是Activity、Dialog还是Toast，他们的视图实际上都是附加在Window上的。<br>
         
-          <a class="article-more-a" href="/2016/03/11/属性动画/#more">more >></a>
+          <a class="article-more-a" href="/2016/03/11/Windows和WindowManager/#more">more >></a>
         
       
 
@@ -538,11 +462,11 @@ var _hmt = _hmt || [];
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">View</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Window</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">属性动画</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">WindowManager</a>
         		</li>
       		
 		</ul>
@@ -567,7 +491,7 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2016/03/11/属性动画/">展开全文 >></a>
+          <a class="article-more-a" href="/2016/03/11/Windows和WindowManager/">展开全文 >></a>
         </p>
       
 
@@ -668,19 +592,19 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-Windows和WindowManager" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-View事件分发机制" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/11/Windows和WindowManager/">Windows和WindowManager</a>
+      <a class="article-title" href="/2016/03/11/View事件分发机制/">View事件分发机制</a>
     </h1>
   
 
         
-        <a href="/2016/03/11/Windows和WindowManager/" class="archive-article-date">
+        <a href="/2016/03/11/View事件分发机制/" class="archive-article-date">
   	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
 </a>
         
@@ -688,9 +612,9 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Window表示一个窗口的概念，在某些特殊的时候，比如你需要在桌面或者锁屏上显示一些类似悬浮窗的东西时候就需要用到Window。Window是一个抽象类，Window的实现类是PhoneWindow。Window的具体实现位于WindowManagerService中，WindowManager和WindowManagerService的交互是一个IPC过程。Android中所有的视图都是通过Window来呈现的，不管是Activity、Dialog还是Toast，他们的视图实际上都是附加在Window上的。<br>
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>点击事件的事件分发就是对MotionEvent事件的分发过程，当一个MotionEvent产生了以后，系统需要把这个事件传递给一个具体的View，而这个传递的过程就是分发的过程。<br>
         
-          <a class="article-more-a" href="/2016/03/11/Windows和WindowManager/#more">more >></a>
+          <a class="article-more-a" href="/2016/03/11/View事件分发机制/#more">more >></a>
         
       
 
@@ -708,11 +632,11 @@ var _hmt = _hmt || [];
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Window</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">View</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">WindowManager</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">事件分发机制</a>
         		</li>
       		
 		</ul>
@@ -737,7 +661,177 @@ var _hmt = _hmt || [];
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2016/03/11/Windows和WindowManager/">展开全文 >></a>
+          <a class="article-more-a" href="/2016/03/11/View事件分发机制/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
+    <article id="post-AIDL" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/11/AIDL/">AIDL</a>
+    </h1>
+  
+
+        
+        <a href="/2016/03/11/AIDL/" class="archive-article-date">
+  	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Android Interface Definition Language (AIDL)， Android接口定义语言。系统中的进程之间不能共享内存，因此，需要提供一些机制在不同进程之间进行数据通信Interprocess communication (IPC)。AIDL就是解决这个问题的。<br>阅读本文需要了解Service的相关知识，关于Service的讲解请参考<a href="http://blog.csdn.net/l664675249/article/details/48899323">http://blog.csdn.net/l664675249/article/details/48899323</a><br>
+        
+          <a class="article-more-a" href="/2016/03/11/AIDL/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">AIDL</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">IPC</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android开发艺术探索笔记/" class="article-tag-list-link color1">Android开发艺术探索笔记</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/03/11/AIDL/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
+    <article id="post-属性动画" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/11/属性动画/">属性动画</a>
+    </h1>
+  
+
+        
+        <a href="/2016/03/11/属性动画/" class="archive-article-date">
+  	<time datetime="2016-03-11T12:46:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2016-03-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Animator最早出现在Android 3.0 中，和之前的Animation框架相比，Animator更加的灵活并且具有更多的功能，官方推荐使用Animator代替Animation。在3.0之前可以使用<a href="http://nineoldandroids.com/">nineoldandroids</a>来实现相同的效果。<br>
+        
+          <a class="article-more-a" href="/2016/03/11/属性动画/#more">more >></a>
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">View</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">属性动画</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/Android开发艺术探索笔记/" class="article-tag-list-link color1">Android开发艺术探索笔记</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2016/03/11/属性动画/">展开全文 >></a>
         </p>
       
 
@@ -917,77 +1011,9 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-我的Android Studio的配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/04/我的Android Studio的配置/">我的Android Studio配置</a>
-    </h1>
-  
-
-        
-        <a href="/2015/10/04/我的Android Studio的配置/" class="archive-article-date">
-  	<time datetime="2015-10-04T08:15:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2015-10-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Android Studio固然好用，但是刚从Eclipse转移到Android Studio上难免有很多不便，现在集中整理一下AS与Eclipse的区别，使得AS更好用。<br>
-        
-          <a class="article-more-a" href="/2015/10/04/我的Android Studio的配置/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/Android/" class="article-tag-list-link color3">Android</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/AndroidStudio/" class="article-tag-list-link color5">Android Studio</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2015/10/04/我的Android Studio的配置/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
     </nav>
   
 
@@ -1097,6 +1123,18 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">安全机制</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">IntentFilter</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">匹配规则</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">AsyncTask</a>
               </li>
              
@@ -1113,10 +1151,6 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">安全机制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
@@ -1125,23 +1159,7 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">IntentFilter</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">匹配规则</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">深入理解JVM虚拟机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Window</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">WindowManager</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1153,11 +1171,19 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">弹性滑动</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">自定义View</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">弹性滑动</a>
+                <a href="javascript:void(0)" class="js-tag color2">Window</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">WindowManager</a>
               </li>
              
               <li class="article-tag-list-item">

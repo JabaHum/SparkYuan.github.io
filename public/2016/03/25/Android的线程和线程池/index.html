@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="Spark Yuan">
 <meta property="og:description" content="在Java中默认情况下一个进程只有一个线程，也就是主线程，其他线程都是子线程，也叫工作线程。Android中的主线程主要处理和界面相关的事情，而子线程则往往用于执行耗时操作。线程的创建和销毁的开销较大，所以如果一个进程要频繁地创建和销毁线程的话，都会采用线程池的方式。">
 <meta property="og:image" content="http://sparkyuan.github.io/images/threads.png">
-<meta property="og:updated_time" content="2016-12-28T12:14:26.000Z">
+<meta property="og:updated_time" content="2017-01-09T01:51:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android的线程和线程池">
 <meta name="twitter:description" content="在Java中默认情况下一个进程只有一个线程，也就是主线程，其他线程都是子线程，也叫工作线程。Android中的主线程主要处理和界面相关的事情，而子线程则往往用于执行耗时操作。线程的创建和销毁的开销较大，所以如果一个进程要频繁地创建和销毁线程的话，都会采用线程池的方式。">
@@ -64,7 +64,7 @@ var _hmt = _hmt || [];
 		  <h1 class="header-author"><a href="/">Spark Yuan</a></h1>
 		</hgroup>
 		
-		<p class="header-subtitle">视觉动物，好奇至死</p>
+		<p class="header-subtitle">咦~ 那是什么，能吃吗？</p>
 		
 
 		<nav class="header-menu">
@@ -116,7 +116,7 @@ var _hmt = _hmt || [];
 			  <h1 class="header-author js-header-author">Spark Yuan</h1>
 			</hgroup>
 			
-			<p class="header-subtitle"><i class="icon icon-quo-left"></i>视觉动物，好奇至死<i class="icon icon-quo-right"></i></p>
+			<p class="header-subtitle"><i class="icon icon-quo-left"></i>咦~ 那是什么，能吃吗？<i class="icon icon-quo-right"></i></p>
 			
 			
 			
@@ -184,11 +184,12 @@ var _hmt = _hmt || [];
 </ul>
 <h2 id="各种线程形态的比较"><a href="#各种线程形态的比较" class="headerlink" title="各种线程形态的比较"></a>各种线程形态的比较</h2><p><img src="/images/threads.png" alt="Threads"></p>
 <h2 id="传统的Thread"><a href="#传统的Thread" class="headerlink" title="传统的Thread"></a>传统的Thread</h2><p>这是Java本身就支持的类，自定义化程度高，但是所有的功能都需要自己维护。</p>
-<h2 id="AsyncTask"><a href="#AsyncTask" class="headerlink" title="AsyncTask"></a>AsyncTask</h2><p>AsyncTask常用于可以在几秒钟完成的后台任务，关于AsyncTask的讲解可以看这一篇文章<a href="http://sparkyuan.me/2016/03/23/AsyncTask%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90(API%2023" target="_blank" rel="external">http://sparkyuan.me/2016/03/23/AsyncTask源码剖析(API 23)/ </a>/)/)<br>讲解了AsyncTask的基本用法和源码分析。</p>
+<h2 id="AsyncTask"><a href="#AsyncTask" class="headerlink" title="AsyncTask"></a>AsyncTask</h2><p>AsyncTask常用于可以在几秒钟完成的后台任务，关于AsyncTask的讲解可以看这一篇文章<a href="http://sparkyuan.me/2016/03/23/AsyncTask源码剖析(API 23" target="_blank" rel="external">http://sparkyuan.me/2016/03/23/AsyncTask%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90(API%2023) </a> )<br>讲解了AsyncTask的基本用法和源码分析。</p>
 <h2 id="HandlerThread"><a href="#HandlerThread" class="headerlink" title="HandlerThread"></a>HandlerThread</h2><p>HandlerThread继承了Thread，是一种可以使用Handler的Thread，它的实现就是在run方法中通过Looper.prepare()来创建消息队列，并通过Looper.loop()来开启消息循环，这样在实际的使用中就允许在HandlerThread中创建Handler了。外界可以通过Handler的消息方式通知HandlerThread执行一个具体的任务。<br>HandlerThread的一个应用场景就是用在IntentService中。HandlerThread的run方法是一个无限循环，因此当明确不需要再使用HandlerThread的时候，可以通过它的quit或者quitSafely方法来终止线程的执行，这是一个良好的编程习惯。</p>
 <h2 id="IntentService"><a href="#IntentService" class="headerlink" title="IntentService"></a>IntentService</h2><p>IntentService是一个特殊的Service，它继承自Service并且是个抽象类，要使用它就要创建它的子类。与AsyncTask不同的是，IntentService用于需要长时间执行的任务，因为他是Service，所以他的优先级比单纯的线程高很多。<br>IntentService的onCreate方法中会创建HandlerThread，并使用HandlerThread的Looper来构造一个Handler对象ServiceHandler，这样通过ServiceHandler对象发送的消息最终都会在HandlerThread中执行。IntentService会将Intent封装到Message中，通过ServiceHandler发送出去，在ServiceHandler的handleMessage方法中会调用IntentService的抽象方法onHandleIntent，所以IntentService的子类都要是实现这个方法。</p>
 <h3 id="一个例子"><a href="#一个例子" class="headerlink" title="一个例子"></a>一个例子</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LocalIntentService</span> <span class="keyword">extends</span> <span class="title">IntentService</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"LocalIntentService"</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LocalIntentService</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(TAG);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onHandleIntent</span><span class="params">(Intent intent)</span> </span>&#123;</div><div class="line">        String action = intent.getStringExtra(<span class="string">"task_action"</span>);</div><div class="line">        Log.d(TAG, <span class="string">"receive task :"</span> +  action);</div><div class="line">        SystemClock.sleep(<span class="number">3000</span>);</div><div class="line">        <span class="keyword">if</span> (<span class="string">"com.ryg.action.TASK1"</span>.equals(action)) &#123;</div><div class="line">            Log.d(TAG, <span class="string">"handle task: "</span> + action);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</div><div class="line">        Log.d(TAG, <span class="string">"service destroyed."</span>);</div><div class="line">        <span class="keyword">super</span>.onDestroy();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Intent service = <span class="keyword">new</span> Intent(<span class="keyword">this</span>, LocalIntentService.class);</div><div class="line">       service.putExtra(<span class="string">"task_action"</span>, <span class="string">"com.sparkyuan.com"</span>);</div><div class="line">       startService(service);</div></pre></td></tr></table></figure>
+<p>三个后台任务是顺序执行的。 第一个任务执行需要sleep(3000)，这时后面的2个任务已经被加入到队列中。</p>
 <h1 id="Android中的线程池"><a href="#Android中的线程池" class="headerlink" title="Android中的线程池"></a>Android中的线程池</h1><h2 id="使用线程池的优点"><a href="#使用线程池的优点" class="headerlink" title="使用线程池的优点"></a>使用线程池的优点</h2><ol>
 <li>重用线程，避免线程的创建和销毁带来的性能开销；</li>
 <li>能有效控制线程池的最大并发数，避免大量的线程之间因互相抢占系统资源而导致的阻塞现象；</li>
@@ -484,6 +485,18 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">安全机制</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">IntentFilter</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">匹配规则</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">AsyncTask</a>
               </li>
              
@@ -500,10 +513,6 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">安全机制</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Android</a>
               </li>
              
@@ -512,23 +521,7 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">IntentFilter</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">匹配规则</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">深入理解JVM虚拟机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Window</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">WindowManager</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -540,11 +533,19 @@ var _hmt = _hmt || [];
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">弹性滑动</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">自定义View</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">弹性滑动</a>
+                <a href="javascript:void(0)" class="js-tag color2">Window</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">WindowManager</a>
               </li>
              
               <li class="article-tag-list-item">
